@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eldritch Code - Where Code Meets the Cosmic Unknown</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,700;1,400&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --void-black: #0a0a0a;
+            --shadow-gray: #1a1a1a;
+            --elder-green: #1a3a2e;
+            --eldritch-glow: #2d5f4f;
+            --cosmic-fog: #3d7f6f;
+            --ancient-gold: #b8a369;
+            --madness-red: #5a1a1a;
+            --text-pale: #d4d4d4;
+            --text-dim: #8a8a8a;
+        }
+        
+        body {
+            font-family: 'Crimson Text', serif;
+            background: var(--void-black);
+            color: var(--text-pale);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background */
+        .cosmic-void {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, var(--shadow-gray) 0%, var(--void-black) 100%);
+            z-index: -2;
+        }
+        
+        .tentacles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            z-index: -1;
+            pointer-events: none;
+            background-image: 
+                radial-gradient(ellipse at 20% 30%, var(--eldritch-glow) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, var(--elder-green) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.03; }
+            50% { opacity: 0.06; }
+        }
+        
+        /* Typography */
+        h1, h2, h3 {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            color: var(--ancient-gold);
+            text-shadow: 0 0 20px rgba(184, 163, 105, 0.3);
+            margin-bottom: 1rem;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            color: var(--cosmic-fog);
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cosmic-fog), transparent);
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--elder-green);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            list-style: none;
+        }
+        
+        nav a {
+            color: var(--text-pale);
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        nav a::before {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--cosmic-fog);
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover {
+            color: var(--cosmic-fog);
+            text-shadow: 0 0 10px rgba(61, 127, 111, 0.5);
+        }
+        
+        nav a:hover::before {
+            width: 100%;
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 2rem;
+            position: relative;
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--text-dim);
+            font-style: italic;
+            margin-bottom: 3rem;
+        }
+        
+        .elder-sign {
+            width: 150px;
+            height: 150px;
+            margin: 2rem auto;
+            position: relative;
+            animation: rotate-slow 20s linear infinite;
+        }
+        
+        @keyframes rotate-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .elder-sign svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 10px rgba(61, 127, 111, 0.5));
+        }
+        
+        /* Sections */
+        section {
+            min-height: 100vh;
+            padding: 8rem 2rem 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .about-text {
+            font-size: 1.2rem;
+            line-height: 2;
+        }
+        
+        .about-text p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .about-text .drop-cap::first-letter {
+            float: left;
+            font-size: 4rem;
+            line-height: 1;
+            font-family: 'Cinzel', serif;
+            color: var(--ancient-gold);
+            margin-right: 0.5rem;
+            margin-top: 0.2rem;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .skill-category {
+            background: rgba(26, 58, 46, 0.2);
+            border: 1px solid var(--elder-green);
+            padding: 1.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .skill-category:hover {
+            background: rgba(26, 58, 46, 0.4);
+            border-color: var(--cosmic-fog);
+            box-shadow: 0 0 20px rgba(61, 127, 111, 0.2);
+        }
+        
+        .skill-category h3 {
+            color: var(--ancient-gold);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .skill-category ul {
+            list-style: none;
+        }
+        
+        .skill-category li {
+            padding: 0.5rem 0;
+            color: var(--text-pale);
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        
+        .skill-category li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--cosmic-fog);
+        }
+        
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .project-card {
+            background: rgba(26, 26, 26, 0.6);
+            border: 1px solid var(--elder-green);
+            padding: 2rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(61, 127, 111, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .project-card:hover::before {
+            left: 100%;
+        }
+        
+        .project-card:hover {
+            border-color: var(--cosmic-fog);
+            box-shadow: 0 0 30px rgba(61, 127, 111, 0.3);
+            transform: translateY(-5px);
+        }
+        
+        .project-card h3 {
+            color: var(--ancient-gold);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .project-card p {
+            color: var(--text-dim);
+            margin-bottom: 1.5rem;
+        }
+        
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .tag {
+            background: rgba(61, 127, 111, 0.2);
+            border: 1px solid var(--cosmic-fog);
+            padding: 0.3rem 0.8rem;
+            border-radius: 3px;
+            font-size: 0.85rem;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
+        }
+        
+        /* Contact Section */
+        .contact-content {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .contact-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-pale);
+            transition: all 0.3s ease;
+            padding: 1.5rem;
+            border: 1px solid var(--elder-green);
+            border-radius: 4px;
+            background: rgba(26, 58, 46, 0.1);
+            min-width: 150px;
+        }
+        
+        .contact-link:hover {
+            color: var(--cosmic-fog);
+            border-color: var(--cosmic-fog);
+            box-shadow: 0 0 20px rgba(61, 127, 111, 0.3);
+            transform: translateY(-5px);
+        }
+        
+        .contact-icon {
+            font-size: 2rem;
+        }
+        
+        .contact-label {
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--elder-green);
+            margin-top: 4rem;
+            font-style: italic;
+            color: var(--text-dim);
+        }
+        
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            color: var(--cosmic-fog);
+            animation: float 2s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            .subtitle { font-size: 1.2rem; }
+            
+            nav ul {
+                gap: 1.5rem;
+                flex-wrap: wrap;
+                padding: 0 1rem;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cosmic-void"></div>
+    <div class="tentacles"></div>
+    
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+    
+    <section id="home" class="hero">
+        <div class="elder-sign">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="100" cy="100" r="80" fill="none" stroke="#3d7f6f" stroke-width="2" opacity="0.5"/>
+                <circle cx="100" cy="100" r="60" fill="none" stroke="#3d7f6f" stroke-width="2" opacity="0.5"/>
+                <path d="M 100 20 L 100 180 M 20 100 L 180 100 M 45 45 L 155 155 M 155 45 L 45 155" 
+                      stroke="#2d5f4f" stroke-width="2" opacity="0.7"/>
+                <circle cx="100" cy="100" r="10" fill="#b8a369" opacity="0.8"/>
+            </svg>
+        </div>
+        <h1>Eldritch Code</h1>
+        <p class="subtitle">Where Code Meets the Cosmic Unknown</p>
+        <div class="scroll-indicator">↓</div>
+    </section>
+    
+    <section id="about">
+        <h2>From the Depths</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <p class="drop-cap">In the shadowed corners of cyberspace, where ancient algorithms whisper secrets lost to time, I craft digital incantations that bridge worlds between the mundane and the unknowable.</p>
+                <p>My tools are not mere languages but keys to forbidden knowledge - each line of code a sigil, each function a summoning circle. I delve into the abyss of complexity and emerge with solutions that would drive lesser minds to madness.</p>
+                <p>The void gazes back, and I compile its mysteries into elegant, terrifying beauty.</p>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Dark Arts</h3>
+                    <ul>
+                        <li>JavaScript / TypeScript</li>
+                        <li>Python</li>
+                        <li>Rust</li>
+                        <li>Go</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Eldritch Frameworks</h3>
+                    <ul>
+                        <li>React / Next.js</li>
+                        <li>Node.js</li>
+                        <li>Django</li>
+                        <li>Docker</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Forbidden Knowledge</h3>
+                    <ul>
+                        <li>Machine Learning</li>
+                        <li>Cloud Architecture</li>
+                        <li>Blockchain</li>
+                        <li>WebGL / Three.js</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Ancient Databases</h3>
+                    <ul>
+                        <li>PostgreSQL</li>
+                        <li>MongoDB</li>
+                        <li>Redis</li>
+                        <li>GraphQL</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="projects">
+        <h2>Summoned Works</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <h3>The Necronomicon API</h3>
+                <p>A RESTful gateway to forbidden knowledge, serving eldritch data to those brave enough to query its depths. Built with Node.js and Express, guarded by JWT authentication.</p>
+                <div class="project-tags">
+                    <span class="tag">Node.js</span>
+                    <span class="tag">Express</span>
+                    <span class="tag">MongoDB</span>
+                </div>
+            </div>
+            
+            <div class="project-card">
+                <h3>Void Watcher Dashboard</h3>
+                <p>Real-time monitoring system that peers into the abyss of system metrics, rendering the incomprehensible into visual terror. Built with React and D3.js.</p>
+                <div class="project-tags">
+                    <span class="tag">React</span>
+                    <span class="tag">D3.js</span>
+                    <span class="tag">WebSocket</span>
+                </div>
+            </div>
+            
+            <div class="project-card">
+                <h3>Cthulhu Commerce</h3>
+                <p>E-commerce platform for artifacts of the Old Ones. Features async payment processing, inventory management, and sanity-optional checkout flows.</p>
+                <div class="project-tags">
+                    <span class="tag">Next.js</span>
+                    <span class="tag">Stripe</span>
+                    <span class="tag">PostgreSQL</span>
+                </div>
+            </div>
+            
+            <div class="project-card">
+                <h3>Dreamlands Navigator</h3>
+                <p>Procedural 3D world generator using noise algorithms and WebGL shaders. Navigate impossible geometries and non-Euclidean spaces in your browser.</p>
+                <div class="project-tags">
+                    <span class="tag">Three.js</span>
+                    <span class="tag">WebGL</span>
+                    <span class="tag">Rust/WASM</span>
+                </div>
+            </div>
+            
+            <div class="project-card">
+                <h3>Ritual Automation Bot</h3>
+                <p>Discord bot that automates community rituals, manages role hierarchies, and summons random cosmic horrors on command. Written in Python with async magic.</p>
+                <div class="project-tags">
+                    <span class="tag">Python</span>
+                    <span class="tag">Discord.py</span>
+                    <span class="tag">Redis</span>
+                </div>
+            </div>
+            
+            <div class="project-card">
+                <h3>The Yellow Sign Tracker</h3>
+                <p>Project management tool for teams working on things that should not be. Features kanban boards, time tracking, and gradual descent into madness metrics.</p>
+                <div class="project-tags">
+                    <span class="tag">Vue.js</span>
+                    <span class="tag">Django</span>
+                    <span class="tag">Docker</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="contact">
+        <h2>Summon Me</h2>
+        <div class="contact-content">
+            <p>Should you dare to reach across the veil and commune with the author of these digital horrors, choose your medium wisely. Each channel opens a different portal to correspondence.</p>
+            <div class="contact-links">
+                <a href="mailto:your.email@example.com" class="contact-link">
+                    <span class="contact-icon">✉</span>
+                    <span class="contact-label">Email</span>
+                </a>
+                <a href="https://github.com/yourusername" class="contact-link" target="_blank">
+                    <span class="contact-icon">⚡</span>
+                    <span class="contact-label">GitHub</span>
+                </a>
+                <a href="https://linkedin.com/in/yourusername" class="contact-link" target="_blank">
+                    <span class="contact-icon">◈</span>
+                    <span class="contact-label">LinkedIn</span>
+                </a>
+                <a href="https://twitter.com/yourusername" class="contact-link" target="_blank">
+                    <span class="contact-icon">⊗</span>
+                    <span class="contact-label">Twitter</span>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <p>"That is not dead which can eternal lie, and with strange aeons even death may die."</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">© 2026 Eldritch Code. All rights reserved in this dimension and beyond.</p>
+    </footer>
+    
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Parallax effect for tentacles
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const tentacles = document.querySelector('.tentacles');
+            tentacles.style.transform = `translateY(${scrolled * 0.5}px)`;
+        });
+        
+        // Fade in elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.project-card, .skill-category').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+        
+        // Cursor effect
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            
+            const tentacles = document.querySelector('.tentacles');
+            const moveX = (x / window.innerWidth - 0.5) * 20;
+            const moveY = (y / window.innerHeight - 0.5) * 20;
+            
+            tentacles.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+    </script>
+</body>
+</html>
