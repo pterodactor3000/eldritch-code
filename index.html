@@ -426,6 +426,11 @@
                 grid-template-columns: 1fr;
             }
             
+            #education > div[style*="grid-template-columns"] {
+                grid-template-columns: 1fr !important;
+                gap: 2rem !important;
+            }
+            
             .projects-grid {
                 grid-template-columns: 1fr;
             }
@@ -445,6 +450,7 @@
         <ul>
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
+            <li><a href="#education">Education</a></li>
             <li><a href="#projects">Projects</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
@@ -475,40 +481,79 @@
             </div>
             <div class="skills-grid">
                 <div class="skill-category">
-                    <h3>Dark Arts</h3>
-                    <ul>
-                        <li>JavaScript / TypeScript</li>
-                        <li>Python</li>
-                        <li>Rust</li>
-                        <li>Go</li>
-                    </ul>
-                </div>
-                <div class="skill-category">
                     <h3>Eldritch Frameworks</h3>
                     <ul>
-                        <li>React / Next.js</li>
-                        <li>Node.js</li>
-                        <li>Django</li>
+                        <li>Angular</li>
+                        <li>React</li>
+                        <li>Next.js</li>
+                        <li>SAP Spartacus</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Dark Languages</h3>
+                    <ul>
+                        <li>TypeScript</li>
+                        <li>JavaScript</li>
+                        <li>HTML5 / CSS3</li>
+                        <li>SQL</li>
+                        <li>.NET</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Cursed Technologies</h3>
+                    <ul>
                         <li>Docker</li>
+                        <li>Azure DevOps</li>
+                        <li>Git</li>
+                        <li>Jenkins</li>
+                        <li>WebRTC</li>
                     </ul>
                 </div>
                 <div class="skill-category">
-                    <h3>Forbidden Knowledge</h3>
+                    <h3>Artefacts & Rituals</h3>
                     <ul>
-                        <li>Machine Learning</li>
-                        <li>Cloud Architecture</li>
-                        <li>Blockchain</li>
-                        <li>WebGL / Three.js</li>
+                        <li>Jest</li>
+                        <li>Storybook</li>
+                        <li>Figma</li>
+                        <li>Material Design</li>
+                        <li>UX</li>
                     </ul>
                 </div>
-                <div class="skill-category">
-                    <h3>Ancient Databases</h3>
-                    <ul>
-                        <li>PostgreSQL</li>
-                        <li>MongoDB</li>
-                        <li>Redis</li>
-                        <li>GraphQL</li>
-                    </ul>
+            </div>
+        </div>
+    </section>
+    
+    <section id="education">
+        <h2>Forbidden Scrolls & Arcane Degrees</h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 3rem;">
+            <div>
+                <h3 style="color: var(--ancient-gold); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">Ancient Texts</h3>
+                <div class="skill-category" style="margin-bottom: 1.5rem;">
+                    <h3 style="color: var(--cosmic-fog); font-size: 1.1rem;">Angular Master</h3>
+                    <p style="color: var(--text-dim); margin-top: 0.5rem;">Angular In Space, 2022</p>
+                </div>
+                <div class="skill-category" style="margin-bottom: 1.5rem;">
+                    <h3 style="color: var(--cosmic-fog); font-size: 1.1rem;">Angular Full</h3>
+                    <p style="color: var(--text-dim); margin-top: 0.5rem;">Angular In Space, 2019</p>
+                </div>
+                <div class="skill-category" style="margin-bottom: 1.5rem;">
+                    <h3 style="color: var(--cosmic-fog); font-size: 1.1rem;">Node.js and Express.js</h3>
+                    <p style="color: var(--text-dim); margin-top: 0.5rem;">NobleProg, 2019</p>
+                </div>
+            </div>
+            
+            <div>
+                <h3 style="color: var(--ancient-gold); font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">Academic Incantations</h3>
+                <div class="skill-category" style="margin-bottom: 1.5rem;">
+                    <h3 style="color: var(--cosmic-fog); font-size: 1.1rem;">M.Sc. in Computer Science</h3>
+                    <p style="color: var(--text-dim); margin-top: 0.5rem;">Koszalin University of Technology</p>
+                    <p style="color: var(--text-dim); font-style: italic; font-size: 0.9rem;">2016 - 2017</p>
+                </div>
+                <div class="skill-category" style="margin-bottom: 1.5rem;">
+                    <h3 style="color: var(--cosmic-fog); font-size: 1.1rem;">Eng. in Computer Science</h3>
+                    <p style="color: var(--text-dim); margin-top: 0.5rem;">Koszalin University of Technology</p>
+                    <p style="color: var(--text-dim); font-style: italic; font-size: 0.9rem;">2012 - 2016</p>
                 </div>
             </div>
         </div>
@@ -584,21 +629,17 @@
         <div class="contact-content">
             <p>Should you dare to reach across the veil and commune with the author of these digital horrors, choose your medium wisely. Each channel opens a different portal to correspondence.</p>
             <div class="contact-links">
-                <a href="mailto:your.email@example.com" class="contact-link">
+                <a href="mailto:m.grygorcewicz@eldritchcode.it" class="contact-link">
                     <span class="contact-icon">✉</span>
                     <span class="contact-label">Email</span>
                 </a>
-                <a href="https://github.com/yourusername" class="contact-link" target="_blank">
+                <a href="https://github.com/pterodactor3000" class="contact-link" target="_blank">
                     <span class="contact-icon">⚡</span>
                     <span class="contact-label">GitHub</span>
                 </a>
-                <a href="https://linkedin.com/in/yourusername" class="contact-link" target="_blank">
+                <a href="https://www.linkedin.com/in/miko%C5%82aj-grygorcewicz" class="contact-link" target="_blank">
                     <span class="contact-icon">◈</span>
                     <span class="contact-label">LinkedIn</span>
-                </a>
-                <a href="https://twitter.com/yourusername" class="contact-link" target="_blank">
-                    <span class="contact-icon">⊗</span>
-                    <span class="contact-label">Twitter</span>
                 </a>
             </div>
         </div>
