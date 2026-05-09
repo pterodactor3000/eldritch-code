@@ -333,6 +333,24 @@
             letter-spacing: 1px;
         }
         
+        .project-card a {
+            display: inline-block;
+            margin-top: 1rem;
+            color: var(--cosmic-fog);
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .project-card a:hover {
+            color: var(--ancient-gold);
+            text-shadow: 0 0 10px rgba(184, 163, 105, 0.5);
+            transform: translateX(5px);
+        }
+        
         /* Contact Section */
         .contact-content {
             max-width: 600px;
@@ -475,9 +493,9 @@
         <h2>From the Depths</h2>
         <div class="about-content">
             <div class="about-text">
-                <p class="drop-cap">In the shadowed corners of cyberspace, where ancient algorithms whisper secrets lost to time, I craft digital incantations that bridge worlds between the mundane and the unknowable.</p>
-                <p>My tools are not mere languages but keys to forbidden knowledge - each line of code a sigil, each function a summoning circle. I delve into the abyss of complexity and emerge with solutions that would drive lesser minds to madness.</p>
-                <p>The void gazes back, and I compile its mysteries into elegant, terrifying beauty.</p>
+                <p class="drop-cap">For over eleven years, I have traversed the shadowed realms of front-end development, architecting scalable web applications that transcend the boundaries of conventional digital experiences.</p>
+                <p>As a senior developer, I wield React and Angular as instruments of creation, specializing in the dark arts of headless architecture, server-side rendering, and performance optimization. Each project is a ritual of precision, transforming complex requirements into elegant solutions.</p>
+                <p>Leading teams through labyrinthine technical challenges, I deliver sophisticated systems for demanding corporate clients, where every line of code serves a greater purpose in the digital cosmos.</p>
             </div>
             <div class="skills-grid">
                 <div class="skill-category">
@@ -563,62 +581,116 @@
         <h2>Summoned Works</h2>
         <div class="projects-grid">
             <div class="project-card">
-                <h3>The Necronomicon API</h3>
-                <p>A RESTful gateway to forbidden knowledge, serving eldritch data to those brave enough to query its depths. Built with Node.js and Express, guarded by JWT authentication.</p>
-                <div class="project-tags">
-                    <span class="tag">Node.js</span>
-                    <span class="tag">Express</span>
-                    <span class="tag">MongoDB</span>
-                </div>
-            </div>
-            
-            <div class="project-card">
-                <h3>Void Watcher Dashboard</h3>
-                <p>Real-time monitoring system that peers into the abyss of system metrics, rendering the incomprehensible into visual terror. Built with React and D3.js.</p>
+                <h3>Zürich Airport Portal</h3>
+                <p>Gateway between realms for Switzerland's aviation hub. Real-time flight tracking, interactive map navigation, and live data streams converging into a seamless traveler experience across dimensions.</p>
                 <div class="project-tags">
                     <span class="tag">React</span>
-                    <span class="tag">D3.js</span>
-                    <span class="tag">WebSocket</span>
-                </div>
-            </div>
-            
-            <div class="project-card">
-                <h3>Cthulhu Commerce</h3>
-                <p>E-commerce platform for artifacts of the Old Ones. Features async payment processing, inventory management, and sanity-optional checkout flows.</p>
-                <div class="project-tags">
                     <span class="tag">Next.js</span>
-                    <span class="tag">Stripe</span>
-                    <span class="tag">PostgreSQL</span>
-                </div>
-            </div>
-            
-            <div class="project-card">
-                <h3>Dreamlands Navigator</h3>
-                <p>Procedural 3D world generator using noise algorithms and WebGL shaders. Navigate impossible geometries and non-Euclidean spaces in your browser.</p>
-                <div class="project-tags">
-                    <span class="tag">Three.js</span>
-                    <span class="tag">WebGL</span>
-                    <span class="tag">Rust/WASM</span>
-                </div>
-            </div>
-            
-            <div class="project-card">
-                <h3>Ritual Automation Bot</h3>
-                <p>Discord bot that automates community rituals, manages role hierarchies, and summons random cosmic horrors on command. Written in Python with async magic.</p>
-                <div class="project-tags">
-                    <span class="tag">Python</span>
-                    <span class="tag">Discord.py</span>
-                    <span class="tag">Redis</span>
-                </div>
-            </div>
-            
-            <div class="project-card">
-                <h3>The Yellow Sign Tracker</h3>
-                <p>Project management tool for teams working on things that should not be. Features kanban boards, time tracking, and gradual descent into madness metrics.</p>
-                <div class="project-tags">
-                    <span class="tag">Vue.js</span>
-                    <span class="tag">Django</span>
+                    <span class="tag">TypeScript</span>
+                    <span class="tag">Azure</span>
                     <span class="tag">Docker</span>
+                </div>
+                <a href="https://www.unic.com/en/projects/zuerich-airport" target="_blank">View Project →</a>
+            </div>
+            
+            <div class="project-card">
+                <h3>Magura Commerce Platform</h3>
+                <p>E-commerce fortress for premium cycling components. Multi-service architecture channeling the power of SAP Spartacus to deliver seamless shopping experiences across the digital void.</p>
+                <div class="project-tags">
+                    <span class="tag">Angular</span>
+                    <span class="tag">SAP Spartacus</span>
+                    <span class="tag">TypeScript</span>
+                    <span class="tag">Azure</span>
+                    <span class="tag">Storybook</span>
+                </div>
+                <a href="https://www.unic.com/en/projects/magenwirth" target="_blank">View Project →</a>
+            </div>
+            
+            <div class="project-card">
+                <h3>Hardware Configuration System</h3>
+                <p>Arcane configurator transforming complex hardware specifications into comprehensible patterns. Designing specific data structures and rendering them as legible incantations for mortal understanding.</p>
+                <div class="project-tags">
+                    <span class="tag">Angular 9</span>
+                    <span class="tag">Material Design</span>
+                    <span class="tag">TypeScript</span>
+                    <span class="tag">nx</span>
+                </div>
+            </div>
+            
+            <div class="project-card">
+                <h3>Workflow Management System</h3>
+                <p>Orchestration platform guiding testers and managers through labyrinthine processes. Automated reporting, calculations, and planning mechanisms that prevent descent into chaos.</p>
+                <div class="project-tags">
+                    <span class="tag">React</span>
+                    <span class="tag">Express.js</span>
+                    <span class="tag">TypeScript</span>
+                    <span class="tag">MSSQL</span>
+                    <span class="tag">Jenkins</span>
+                </div>
+            </div>
+            
+            <div class="project-card">
+                <h3>Product Search Engine</h3>
+                <p>Elasticsearch-powered divination tool for product discovery. Queries pierce through vast data repositories, summoning precisely what seekers desire from the infinite catalog.</p>
+                <div class="project-tags">
+                    <span class="tag">Angular 6</span>
+                    <span class="tag">Material Design</span>
+                    <span class="tag">Elasticsearch</span>
+                </div>
+            </div>
+            
+            <div class="project-card">
+                <h3>Enterprise Reporting System</h3>
+                <p>Data visualization grimoire channeling business intelligence through temporal processing. Scheduled tasks and real-time analytics illuminate the path through numerical darkness.</p>
+                <div class="project-tags">
+                    <span class="tag">AngularJS</span>
+                    <span class="tag">Material Design</span>
+                    <span class="tag">.NET MVC</span>
+                    <span class="tag">MSSQL</span>
+                    <span class="tag">Hangfire</span>
+                </div>
+            </div>
+            
+            <div class="project-card">
+                <h3>Product Information Portal</h3>
+                <p>Detailed product showcase manifesting comprehensive information through elegant interfaces. Every specification, every detail rendered in crystalline clarity for the discerning observer.</p>
+                <div class="project-tags">
+                    <span class="tag">Kendo.MVC</span>
+                    <span class="tag">.NET MVC</span>
+                    <span class="tag">MSSQL</span>
+                    <span class="tag">jQuery</span>
+                </div>
+            </div>
+            
+            <div class="project-card">
+                <h3>SVG Parts Catalogue</h3>
+                <p>Interactive automotive parts visualization system. Scalable vector graphics reveal intricate mechanical relationships, allowing exploration of vehicular anatomy through digital sorcery.</p>
+                <div class="project-tags">
+                    <span class="tag">Kendo.js</span>
+                    <span class="tag">.NET MVC</span>
+                    <span class="tag">MSSQL</span>
+                    <span class="tag">SVG</span>
+                </div>
+            </div>
+            
+            <div class="project-card">
+                <h3>Security Infrastructure</h3>
+                <p>Authentication fortress guarding digital realms. Identity management protocols and authorization mechanisms forming an impenetrable barrier against unauthorized entities.</p>
+                <div class="project-tags">
+                    <span class="tag">WebAPI</span>
+                    <span class="tag">MSSQL</span>
+                    <span class="tag">IdentityServer3</span>
+                </div>
+            </div>
+            
+            <div class="project-card">
+                <h3>SVG Configuration Tool</h3>
+                <p>Dynamic image manipulation system for automotive parts. Real-time SVG transformations enabling visual configuration of vehicle components through arcane geometric algorithms.</p>
+                <div class="project-tags">
+                    <span class="tag">ExtJS</span>
+                    <span class="tag">.NET MVC</span>
+                    <span class="tag">MSSQL</span>
+                    <span class="tag">jQuery</span>
                 </div>
             </div>
         </div>
