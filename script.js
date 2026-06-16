@@ -12,13 +12,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Parallax effect for tentacles
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const tentacles = document.querySelector('.tentacles');
-    tentacles.style.transform = `translateY(${scrolled * 0.5}px)`;
-});
-
 // Fade in elements on scroll
 const observerOptions = {
     threshold: 0.1,
@@ -41,14 +34,75 @@ document.querySelectorAll('.project-card, .skill-category').forEach(el => {
     observer.observe(el);
 });
 
-// Cursor effect
-document.addEventListener('mousemove', (e) => {
-    const x = e.clientX;
-    const y = e.clientY;
+// Skill categories: show 4 items, modal for the rest
+const SKILL_PREVIEW_LIMIT = 4;
+const skillModal = document.getElementById('skill-modal');
+const skillModalTitle = document.getElementById('skill-modal-title');
+const skillModalList = document.getElementById('skill-modal-list');
+let skillModalTrigger = null;
 
-    const tentacles = document.querySelector('.tentacles');
-    const moveX = (x / window.innerWidth - 0.5) * 20;
-    const moveY = (y / window.innerHeight - 0.5) * 20;
+function initSkillPreviews() {
+    document.querySelectorAll('.skills-grid .skill-category').forEach((category) => {
+        const items = category.querySelectorAll('ul li');
+        const witnessBtn = category.querySelector('.skill-witness-more');
 
-    tentacles.style.transform = `translate(${moveX}px, ${moveY}px)`;
-});
+        if (items.length <= SKILL_PREVIEW_LIMIT) return;
+
+        items.forEach((item, index) => {
+            if (index >= SKILL_PREVIEW_LIMIT) {
+                item.classList.add('skill-item-hidden');
+            }
+        });
+
+        if (witnessBtn) {
+            witnessBtn.hidden = false;
+            witnessBtn.addEventListener('click', () => openSkillModal(category, witnessBtn));
+        }
+    });
+}
+
+function openSkillModal(category, trigger) {
+    if (!skillModal || !skillModalTitle || !skillModalList) return;
+
+    const title = category.querySelector('h3')?.textContent ?? 'Technologies';
+    const items = category.querySelectorAll('ul li');
+
+    skillModalTitle.textContent = title;
+    skillModalList.replaceChildren();
+
+    items.forEach((item) => {
+        const li = document.createElement('li');
+        li.textContent = item.textContent;
+        skillModalList.appendChild(li);
+    });
+
+    skillModal.hidden = false;
+    skillModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    skillModalTrigger = trigger;
+    skillModal.querySelector('.skill-modal-close')?.focus();
+}
+
+function closeSkillModal() {
+    if (!skillModal) return;
+
+    skillModal.hidden = true;
+    skillModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    skillModalTrigger?.focus();
+    skillModalTrigger = null;
+}
+
+if (skillModal) {
+    skillModal.querySelectorAll('[data-skill-modal-close]').forEach((el) => {
+        el.addEventListener('click', closeSkillModal);
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !skillModal.hidden) {
+            closeSkillModal();
+        }
+    });
+}
+
+initSkillPreviews();

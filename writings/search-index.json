@@ -1,0 +1,16 @@
+[
+  {
+    "slug": "linear-cursor-mcp-connection",
+    "title": "The curse of Linear-Cursor MCP connection",
+    "excerpt": "In this scroll I record findings from connecting Linear to Cursor on Linux.",
+    "tags": [
+      "linear",
+      "cursor",
+      "ai",
+      "linux",
+      "arch"
+    ],
+    "category": "configuration",
+    "date": "2026-06-15"
+  }
+]

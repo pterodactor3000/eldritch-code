@@ -237,6 +237,7 @@
             <li><a href="#about">About</a></li>
             <li><a href="#education">Education</a></li>
             <li><a href="#projects">Projects</a></li>
+            <li><a href="/writings/">Writings</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
     </nav>
@@ -274,11 +275,15 @@
                 <div class="skill-category">
                     <h3>Eldritch Frameworks</h3>
                     <ul>
-                        <li>Angular</li>
                         <li>React</li>
                         <li>Next.js</li>
+                        <li>Astro</li>
+                        <li>Angular</li>
+                        <li>Node.js</li>
+                        <li>Express.js</li>
                         <li>SAP Spartacus</li>
                     </ul>
+                    <button type="button" class="skill-witness-more" hidden>Witness more…</button>
                 </div>
                 <div class="skill-category">
                     <h3>Dark Languages</h3>
@@ -288,27 +293,46 @@
                         <li>HTML5 / CSS3</li>
                         <li>SQL</li>
                         <li>.NET</li>
+                        <li>C#</li>
                     </ul>
+                    <button type="button" class="skill-witness-more" hidden>Witness more…</button>
                 </div>
                 <div class="skill-category">
                     <h3>Cursed Technologies</h3>
                     <ul>
-                        <li>Docker</li>
-                        <li>Azure DevOps</li>
                         <li>Git</li>
-                        <li>Jenkins</li>
+                        <li>Cloudflare</li>
+                        <li>Docker</li>
+                        <li>GitHub Actions</li>
+                        <li>Azure DevOps</li>
+                        <li>Supabase</li>
+                        <li>Sentry</li>
                         <li>WebRTC</li>
+                        <li>Jenkins</li>
                     </ul>
+                    <button type="button" class="skill-witness-more" hidden>Witness more…</button>
                 </div>
                 <div class="skill-category">
                     <h3>Artefacts & Rituals</h3>
                     <ul>
-                        <li>Jest</li>
-                        <li>Storybook</li>
                         <li>Figma</li>
+                        <li>shadcn/ui</li>
+                        <li>Linear</li>
+                        <li>Tailwind</li>
+                        <li>Styled Components</li>
+                        <li>Emotion</li>
+                        <li>Sass</li>
+                        <li>Less</li>
+                        <li>Jest</li>
+                        <li>Vitest</li>
+                        <li>Playwright</li>
                         <li>Material Design</li>
+                        <li>Storybook</li>
                         <li>UX</li>
+                        <li>Confluence</li>
+                        <li>Jira</li>
                     </ul>
+                    <button type="button" class="skill-witness-more" hidden>Witness more…</button>
                 </div>
             </div>
         </div>
@@ -354,7 +378,11 @@
 
     <section id="projects">
         <h2>Summoned Works</h2>
-        <div class="projects-grid">
+
+        <div class="projects-subsection">
+            <h3 class="projects-subsection-title">Commissioned Scrolls</h3>
+            <p class="projects-subsection-desc">Works summoned on contract for clients across the digital void.</p>
+            <div class="projects-grid">
             <div class="project-card">
                 <h3>Zürich Airport Portal</h3>
                 <p>Gateway between realms for Switzerland's aviation hub. Real-time flight tracking, interactive map
@@ -480,6 +508,30 @@
                     <span class="tag">jQuery</span>
                 </div>
             </div>
+            </div>
+        </div>
+
+        <div class="projects-subsection">
+            <h3 class="projects-subsection-title">Personal Grimoires</h3>
+            <p class="projects-subsection-desc">Solo rituals and experiments undertaken beyond the bounds of commissioned work.</p>
+            <div class="projects-grid">
+            <div class="project-card">
+                <h3>Handouts Scriptorium</h3>
+                <p>A sanctum for tabletop game masters to create, store, and organize handouts for various TTRPGs — all
+                    gathered in one place. Summon a share link to reveal selected scrolls to players without unveiling the
+                    full archive. Forged during a certification course in agentic workflow design.</p>
+                <div class="project-tags">
+                    <span class="tag">AI Agents</span>
+                    <span class="tag">Supabase</span>
+                    <span class="tag">Cloudflare</span>
+                    <span class="tag">TypeScript</span>
+                    <span class="tag">Tailwind</span>
+                    <span class="tag">React</span>
+                    <span class="tag">Astro</span>
+                </div>
+                <a href="https://scriptorium.eldritchcode.it/" target="_blank">View Application →</a>
+            </div>
+            </div>
         </div>
     </section>
 
@@ -510,6 +562,15 @@
         <p style="margin-top: 1rem; font-size: 0.9rem;">© 2026 Eldritch Code. All rights reserved in this dimension and
             beyond.</p>
     </footer>
+
+    <div id="skill-modal" class="skill-modal" hidden aria-hidden="true">
+        <div class="skill-modal-backdrop" data-skill-modal-close></div>
+        <div class="skill-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="skill-modal-title">
+            <button type="button" class="skill-modal-close" aria-label="Close" data-skill-modal-close>×</button>
+            <h3 id="skill-modal-title" class="skill-modal-title"></h3>
+            <ul id="skill-modal-list" class="skill-modal-list"></ul>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
