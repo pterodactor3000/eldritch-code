@@ -122,7 +122,7 @@ function renderMarkdown(content) {
   const before = raw.length;
   const clean = sanitizeHtml(raw, SANITIZE_OPTIONS);
   if (clean.length < before * 0.5 && raw.includes('<')) {
-    console.warn('Warning: sanitizer removed significant content — raw HTML may have been present in Markdown source.');
+    console.warn('Warning: sanitizer removed significant content - raw HTML may have been present in Markdown source.');
   }
   return clean;
 }
@@ -252,7 +252,7 @@ function buildSearchIndex(posts) {
 
 function writeWritingsClientScript() {
   const script = `// Client-side search and tag filtering for writings index.
-// Uses textContent only — never innerHTML with external data.
+// Uses textContent only - never innerHTML with external data.
 
 (function () {
   const grid = document.getElementById('writings-grid');

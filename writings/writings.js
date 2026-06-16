@@ -1,5 +1,5 @@
 // Client-side search and tag filtering for writings index.
-// Uses textContent only — never innerHTML with external data.
+// Uses textContent only - never innerHTML with external data.
 
 (function () {
   const grid = document.getElementById('writings-grid');
