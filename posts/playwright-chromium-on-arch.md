@@ -1,7 +1,7 @@
 ---
 title: "The curse of Playwright CLI and Chromium on Arch"
 date: 2026-06-06
-tags: [playwright, chromium, cursor, ai, linux, arch, cachyos]
+tags: [playwright, chromium, mcp, linux, arch, workaround]
 category: configuration
 ---
 

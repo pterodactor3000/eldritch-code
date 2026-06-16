@@ -1,7 +1,7 @@
 ---
 title: "The curse of Linear-Cursor MCP connection"
 date: 2026-06-15
-tags: [linear, cursor, ai, linux, arch]
+tags: [linear, cursor, mcp, oauth, linux, workaround]
 category: configuration
 ---
 

@@ -1,52 +1,54 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{TITLE}} — Eldritch Code</title>
-    <meta name="description" content="{{EXCERPT}}">
-    <meta property="og:title" content="{{TITLE}}">
-    <meta property="og:description" content="{{EXCERPT}}">
-    <meta property="og:type" content="article">
-    <link rel="icon" href="/sigil.png" type="image/x-icon">
-    <link rel="stylesheet" href="/styles.css">
-</head>
+    <meta name="description" content="{{EXCERPT}}" />
+    <meta property="og:title" content="{{TITLE}}" />
+    <meta property="og:description" content="{{EXCERPT}}" />
+    <meta property="og:type" content="article" />
+    <link rel="icon" href="/sigil.png" type="image/x-icon" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
 
-<body>
+  <body>
     <div class="cosmic-void"></div>
     <div class="tentacles"></div>
 
     <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/writings/">Writings</a></li>
-        </ul>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/writings/">Writings</a></li>
+      </ul>
     </nav>
 
     <article class="writings-post">
-        <header class="writings-post-header">
-            <a href="/writings/" class="writings-back">← Back to the Archives</a>
-            <h1>{{TITLE}}</h1>
-            <div class="writings-meta">
-                <time datetime="{{DATE_ISO}}">{{DATE_DISPLAY}}</time>
-                <span class="writings-meta-sep">·</span>
-                <span>{{READING_TIME}}</span>
-                {{CATEGORY_HTML}}
-            </div>
-            <div class="writings-tags-inline">{{TAGS_HTML}}</div>
-        </header>
-        <div class="writings-prose">{{CONTENT}}</div>
-        {{RELATED_HTML}}
+      <header class="writings-post-header">
+        <a href="/writings/" class="writings-back">← Back to the Archives</a>
+        <h1>{{TITLE}}</h1>
+        <div class="writings-meta">
+          <time datetime="{{DATE_ISO}}">{{DATE_DISPLAY}}</time>
+          <span class="writings-meta-sep">·</span>
+          <span>{{READING_TIME}}</span>
+          {{CATEGORY_HTML}}
+        </div>
+        <div class="writings-tags-inline">{{TAGS_HTML}}</div>
+      </header>
+      <div class="writings-prose">{{CONTENT}}</div>
+      {{RELATED_HTML}}
     </article>
 
     <footer>
-        <p>"That is not dead which can eternal lie, and with strange aeons even death may die."</p>
-        <p style="margin-top: 1rem; font-size: 0.9rem;">© 2026 Eldritch Code. All rights reserved in this dimension and
-            beyond.</p>
+      <p>
+        "That is not dead which can eternal lie, and with strange aeons even
+        death may die."
+      </p>
+      <p style="margin-top: 1rem; font-size: 0.9rem">
+        © 2026 Eldritch Code. All rights reserved in this dimension and beyond.
+      </p>
     </footer>
 
     <script src="/script.js"></script>
-</body>
-
+  </body>
 </html>

@@ -6,9 +6,10 @@
     "tags": [
       "linear",
       "cursor",
-      "ai",
+      "mcp",
+      "oauth",
       "linux",
-      "arch"
+      "workaround"
     ],
     "category": "configuration",
     "date": "2026-06-15"
@@ -20,11 +21,10 @@
     "tags": [
       "playwright",
       "chromium",
-      "cursor",
-      "ai",
+      "mcp",
       "linux",
       "arch",
-      "cachyos"
+      "workaround"
     ],
     "category": "configuration",
     "date": "2026-06-06"
