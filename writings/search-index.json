@@ -1,0 +1,32 @@
+[
+  {
+    "slug": "linear-cursor-mcp-connection",
+    "title": "The curse of Linear-Cursor MCP connection",
+    "excerpt": "I needed Linear in Cursor on Linux. The OAuth flow almost works, which is worse than it cleanly failing.",
+    "tags": [
+      "linear",
+      "cursor",
+      "mcp",
+      "oauth",
+      "linux",
+      "workaround"
+    ],
+    "category": "configuration",
+    "date": "2026-06-15"
+  },
+  {
+    "slug": "playwright-chromium-on-arch",
+    "title": "The curse of Playwright CLI and Chromium on Arch",
+    "excerpt": "I needed `playwright-cli` for agent browser automation on CachyOS. It failed immediately, not because Chromium was missing. It was looking in the _wrong place_...",
+    "tags": [
+      "playwright",
+      "chromium",
+      "mcp",
+      "linux",
+      "arch",
+      "workaround"
+    ],
+    "category": "configuration",
+    "date": "2026-06-06"
+  }
+]

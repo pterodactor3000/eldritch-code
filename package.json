@@ -1,0 +1,16 @@
+{
+  "name": "eldritch-code",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-writings.js",
+    "dev": "npm run build && wrangler dev"
+  },
+  "devDependencies": {
+    "gray-matter": "^4.0.3",
+    "highlight.js": "^11.11.1",
+    "markdown-it": "^14.1.0",
+    "reading-time": "^1.5.0",
+    "sanitize-html": "^2.14.0"
+  }
+}
