@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The curse of Playwright CLI and Chromium on Arch — Eldritch Code</title>
+    <meta name="description" content="I needed `playwright-cli` for agent browser automation on CachyOS. It failed immediately, not because Chromium was missing. It was looking in the _wrong place_...">
+    <meta property="og:title" content="The curse of Playwright CLI and Chromium on Arch">
+    <meta property="og:description" content="I needed `playwright-cli` for agent browser automation on CachyOS. It failed immediately, not because Chromium was missing. It was looking in the _wrong place_...">
+    <meta property="og:type" content="article">
+    <link rel="icon" href="/sigil.png" type="image/x-icon">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+    <div class="cosmic-void"></div>
+    <div class="tentacles"></div>
+
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/writings/">Writings</a></li>
+        </ul>
+    </nav>
+
+    <article class="writings-post">
+        <header class="writings-post-header">
+            <a href="/writings/" class="writings-back">← Back to the Archives</a>
+            <h1>The curse of Playwright CLI and Chromium on Arch</h1>
+            <div class="writings-meta">
+                <time datetime="2026-06-06">June 6, 2026</time>
+                <span class="writings-meta-sep">·</span>
+                <span>5 min read</span>
+                <span class="writings-meta-sep">·</span><span class="tag writings-category">configuration</span>
+            </div>
+            <div class="writings-tags-inline"><span class="tag writings-tag" data-tag="playwright">playwright</span><span class="tag writings-tag" data-tag="chromium">chromium</span><span class="tag writings-tag" data-tag="cursor">cursor</span><span class="tag writings-tag" data-tag="ai">ai</span><span class="tag writings-tag" data-tag="linux">linux</span><span class="tag writings-tag" data-tag="arch">arch</span><span class="tag writings-tag" data-tag="cachyos">cachyos</span></div>
+        </header>
+        <div class="writings-prose"><p>I needed <code>playwright-cli</code> for agent browser automation on CachyOS. It failed immediately, not because Chromium was missing. It was looking in the <em>wrong place</em>...</p>
+<h2>Known unknowns</h2>
+<p>When <code>playwright-cli open</code> refused to launch a browser, I assumed the install was broken. It wasn't.</p>
+<p>The global <code>@playwright/cli</code> agent tool defaults to the <strong><code>chrome</code> channel</strong>, real Google Chrome at <code>/opt/google/chrome/chrome</code>. On Arch that path is usually empty. Most of us run system Chromium from <code>/usr/bin/chromium</code> instead. First noticed on CachyOS. The behavior is <strong>by design</strong>, not a local misconfiguration.</p>
+<h2>The immutable truths</h2>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>System</td>
+<td>Arch-based distribution (CachyOS)</td>
+</tr>
+<tr>
+<td>Shell</td>
+<td>Fish (default on CachyOS)</td>
+</tr>
+<tr>
+<td>System Chromium</td>
+<td><code>/usr/bin/chromium</code> - installed via package manager</td>
+</tr>
+<tr>
+<td>Google Chrome</td>
+<td><em>not installed</em> - expected by default <code>chrome</code> channel</td>
+</tr>
+<tr>
+<td>Agent tool</td>
+<td>Global <code>@playwright/cli</code> v0.1.13 - separate from project E2E config</td>
+</tr>
+</tbody>
+</table>
+<h2>The curse!</h2>
+<p>The agent CLI asks for Google Chrome. On Arch, that goes wrong fast. The steps:</p>
+<ol>
+<li><code>playwright-cli open https://example.com</code></li>
+<li>CLI reaches for the <strong><code>chrome</code> channel</strong>, not system Chromium</li>
+<li>It checks <code>/opt/google/chrome/chrome</code></li>
+<li>Nothing there. No window opens.</li>
+</ol>
+<p>What the logs said:</p>
+<pre class="hljs"><code class="language-text">Error: Chromium distribution 'chrome' is not found at /opt/google/chrome/chrome
+Run "npx playwright install chrome"
+</code></pre>
+<p>The path is wrong. Chromium is elsewhere. The daemon gives up.</p>
+<p>The curse is narrow, at least. The project's <code>playwright.config.ts</code> was <strong>never touched</strong>. E2E tests already aim at <code>/usr/bin/chromium</code> and Vivaldi through <code>launchOptions.executablePath</code>. The <strong>global agent CLI</strong> (<code>playwright-cli</code>) suffers here. But not as much as I did.</p>
+<h2>Cause of our demise</h2>
+<p>The default channel is hard-coded. The CLI expects Google Chrome. Arch ships Chromium. <em>Same binary family, wrong path.</em></p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Source</strong></td>
+<td>Global <code>@playwright/cli</code> v0.1.13 - not the project's Playwright test config</td>
+</tr>
+<tr>
+<td><strong>Default behavior</strong></td>
+<td>Tries to launch the <strong><code>chrome</code> channel</strong> (real Google Chrome)</td>
+</tr>
+<tr>
+<td><strong>Expected path</strong></td>
+<td><code>/opt/google/chrome/chrome</code></td>
+</tr>
+<tr>
+<td><strong>Typical Arch setup</strong></td>
+<td>System Chromium at <code>/usr/bin/chromium</code>, no Google Chrome installed</td>
+</tr>
+<tr>
+<td><strong>Impact</strong></td>
+<td>Agent CLI <strong>cannot launch any browser</strong> without explicit configuration</td>
+</tr>
+</tbody>
+</table>
+<h3>Browsers available on this system</h3>
+<table>
+<thead>
+<tr>
+<th>Browser</th>
+<th>Path</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chromium (system)</td>
+<td><code>/usr/bin/chromium</code></td>
+<td>Installed via package manager</td>
+</tr>
+<tr>
+<td>Vivaldi</td>
+<td><code>/usr/bin/vivaldi-stable</code> → <code>/opt/vivaldi/vivaldi</code></td>
+<td>Chromium-based</td>
+</tr>
+<tr>
+<td>Google Chrome</td>
+<td><em>not installed</em></td>
+<td>Expected by default <code>chrome</code> channel</td>
+</tr>
+<tr>
+<td>Playwright bundled</td>
+<td><code>~/.cache/ms-playwright/chromium-1223/</code></td>
+<td>Downloaded by <code>npx playwright install</code></td>
+</tr>
+</tbody>
+</table>
+<p>What I tried:</p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--browser=chromium</code></td>
+<td>Failed - CLI expects <code>chrome-for-testing</code>, not the bundled Playwright Chromium</td>
+</tr>
+<tr>
+<td><code>PLAYWRIGHT_MCP_EXECUTABLE_PATH=/usr/bin/chromium</code></td>
+<td><strong>Works</strong> - launches system Chromium with no download</td>
+</tr>
+<tr>
+<td><code>source ~/.zshrc</code> in fish</td>
+<td>Failed - fish cannot parse zsh syntax (see below)</td>
+</tr>
+</tbody>
+</table>
+<h2>Recommended way of making us whole</h2>
+<p>Point the CLI at system Chromium. Set <code>PLAYWRIGHT_MCP_EXECUTABLE_PATH</code> and the default channel lookup never fires.</p>
+<h3>1. Bind the path in Fish</h3>
+<p>A universal exported variable survives every new fish session:</p>
+<pre class="hljs"><code>set -Ux PLAYWRIGHT_MCP_EXECUTABLE_PATH /usr/bin/chromium
+</code></pre>
+<p>Verify:</p>
+<pre class="hljs"><code>echo $PLAYWRIGHT_MCP_EXECUTABLE_PATH
+playwright-cli open https://example.com
+</code></pre>
+<p>Remove later if needed:</p>
+<pre class="hljs"><code>set -Ue PLAYWRIGHT_MCP_EXECUTABLE_PATH
+</code></pre>
+<h3>2. Bind the path in Zsh or Bash</h3>
+<p>Add to <code>~/.zshrc</code> or <code>~/.bashrc</code>:</p>
+<pre class="hljs"><code class="language-bash"><span class="hljs-built_in">export</span> PLAYWRIGHT_MCP_EXECUTABLE_PATH=/usr/bin/chromium
+</code></pre>
+<p>One-off, any shell:</p>
+<pre class="hljs"><code class="language-bash">PLAYWRIGHT_MCP_EXECUTABLE_PATH=/usr/bin/chromium playwright-cli open https://example.com
+</code></pre>
+<h3>3. Resurrect the daemon</h3>
+<p>Open a fresh terminal, then run <code>playwright-cli open</code> once more. The page should load.</p>
+<h2>From different works, from libraries far and wide</h2>
+<p>If you prefer not to set the env var, three other paths remain, each with a cost:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Command</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>System Chromium</strong> (chosen)</td>
+<td><code>set -Ux PLAYWRIGHT_MCP_EXECUTABLE_PATH /usr/bin/chromium</code></td>
+<td>No download; uses existing package</td>
+</tr>
+<tr>
+<td><strong>Chrome-for-testing</strong></td>
+<td><code>playwright-cli install-browser chrome-for-testing</code></td>
+<td>Playwright-managed browser for the CLI</td>
+</tr>
+<tr>
+<td><strong>Google Chrome</strong></td>
+<td><code>npx playwright install chrome</code></td>
+<td>Makes the default <code>chrome</code> channel work as-is</td>
+</tr>
+</tbody>
+</table>
+<h3>Project E2E config (unchanged)</h3>
+<p>The project's <code>playwright.config.ts</code> already names its browsers explicitly and never depended on the <code>chrome</code> channel:</p>
+<pre class="hljs"><code class="language-ts"><span class="hljs-attr">projects</span>: [
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'chromium'</span>,
+    <span class="hljs-attr">use</span>: {
+      ...devices[<span class="hljs-string">'Desktop Chrome'</span>],
+      <span class="hljs-attr">launchOptions</span>: { <span class="hljs-attr">executablePath</span>: <span class="hljs-string">'/usr/bin/chromium'</span> },
+    },
+  },
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'vivaldi'</span>,
+    <span class="hljs-attr">use</span>: {
+      <span class="hljs-attr">launchOptions</span>: { <span class="hljs-attr">executablePath</span>: <span class="hljs-string">'/usr/bin/vivaldi-stable'</span> },
+    },
+  },
+],
+</code></pre>
+<p>Run E2E tests with:</p>
+<pre class="hljs"><code class="language-bash">npx playwright <span class="hljs-built_in">test</span>
+</code></pre>
+<p>That uses the project's local <code>@playwright/test</code> dependency, separate from the global <code>@playwright/cli</code> agent tool.</p>
+<h2>Why would this way work?</h2>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Browser source</th>
+<th>Arch / CachyOS impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Default <code>chrome</code> channel</td>
+<td>Google Chrome at <code>/opt/google/chrome/chrome</code></td>
+<td>Broken - Chrome not installed on typical Arch setups</td>
+</tr>
+<tr>
+<td><code>PLAYWRIGHT_MCP_EXECUTABLE_PATH</code></td>
+<td>System Chromium at <code>/usr/bin/chromium</code></td>
+<td>Works - no download; uses existing package</td>
+</tr>
+<tr>
+<td><code>chrome-for-testing</code> install</td>
+<td>Playwright-managed browser</td>
+<td>Works - but requires a separate download</td>
+</tr>
+<tr>
+<td>Project <code>playwright.config.ts</code></td>
+<td>Explicit <code>executablePath</code> per project</td>
+<td>Unaffected - already configured correctly</td>
+</tr>
+</tbody>
+</table>
+<h2>Beware of the unseen</h2>
+<ul>
+<li>
+<p><strong>Do not source <code>~/.zshrc</code> from fish.</strong> I made that mistake once. Fish cannot parse zsh syntax:</p>
+<pre class="hljs"><code class="language-text">Unsupported use of '='. In fish, please use 'set DISABLE_MAGIC_FUNCTIONS "true"'.
+</code></pre>
+<p>Use the fish universal variable above instead.</p>
+</li>
+<li>
+<p>The global <code>@playwright/cli</code> and the project's <code>@playwright/test</code> are separate tools. Fixing one does not fix the other. In my case, only the CLI needed attention.</p>
+</li>
+</ul>
+<h2>Grimoires and scrolls used in esoteric research</h2>
+<ul>
+<li><a href="https://www.npmjs.com/package/@playwright/cli">@playwright/cli npm package</a> - documents the global agent CLI and its default browser channels.</li>
+<li><a href="https://playwright.dev/docs/browsers">Playwright browser channels documentation</a> - distinguishes <code>chromium</code>, <code>chrome</code>, and <code>chrome-for-testing</code>.</li>
+</ul>
+</div>
+        <aside class="writings-related">
+    <h2>Related Writings</h2>
+    <ul><li><a href="/writings/linear-cursor-mcp-connection/">The curse of Linear-Cursor MCP connection</a></li></ul>
+  </aside>
+    </article>
+
+    <footer>
+        <p>"That is not dead which can eternal lie, and with strange aeons even death may die."</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">© 2026 Eldritch Code. All rights reserved in this dimension and
+            beyond.</p>
+    </footer>
+
+    <script src="/script.js"></script>
+</body>
+
+</html>
