@@ -1,6 +1,6 @@
 # Eldritch Code
 
-Landing page and writings for [Eldritch Code](https://eldritchcode.it) — a static site with an eldritch/lovecraftian theme.
+Landing page and writings for [Eldritch Code](https://eldritchcode.it) - a static site with an eldritch/lovecraftian theme.
 
 ## Structure
 
@@ -38,7 +38,7 @@ Add a new post by creating `posts/your-slug.md` (slug = filename without `.md`),
 - Raw HTML in Markdown is disabled (`html: false`)
 - Rendered output is sanitized with an allowlist before publishing
 - Frontmatter values are HTML-escaped in templates
-- Do not embed `<script>` or event handlers in Markdown — they will be stripped
+- Do not embed `<script>` or event handlers in Markdown - they will be stripped
 
 ## Local development
 
