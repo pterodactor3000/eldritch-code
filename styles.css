@@ -83,19 +83,12 @@ body {
 
 .sigil-background {
   position: absolute;
-  opacity: 0.05;
   filter: blur(1px);
+  background: url("sigil.png") center / contain no-repeat;
 }
 
 .sigil-background svg {
-  width: 100%;
-  height: 100%;
-}
-
-.sigil-background path,
-.sigil-background circle {
-  stroke: var(--eldritch-glow) !important;
-  fill: none !important;
+  display: none;
 }
 
 @keyframes pulse {
@@ -477,6 +470,7 @@ section {
 /* Projects Section */
 .projects-subsection {
   margin-top: 4rem;
+  scroll-margin-top: 5rem;
 }
 
 .projects-subsection:first-of-type {

@@ -1,3 +1,8 @@
+// Random opacity for background sigils
+document.querySelectorAll('.sigil-background').forEach((sigil) => {
+    sigil.style.opacity = 0.025 + Math.random() * 0.025;
+});
+
 // Smooth scrolling
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
