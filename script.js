@@ -111,3 +111,94 @@ if (skillModal) {
 }
 
 initSkillPreviews();
+
+// Mobile nav: full menu at top, single active section when scrolled
+(function initMobileNav() {
+    const nav = document.querySelector('nav');
+    if (!nav) return;
+
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    const navLinks = Array.from(document.querySelectorAll('nav a[href^="#"]'));
+    const sections = navLinks
+        .map((link) => {
+            const id = link.getAttribute('href').slice(1);
+            const el = document.getElementById(id);
+            return el ? { id, el, li: link.parentElement } : null;
+        })
+        .filter(Boolean);
+
+    function updateNav() {
+        if (!mobileQuery.matches) {
+            nav.classList.remove('nav-collapsed');
+            sections.forEach(({ li }) => li.classList.remove('nav-active'));
+            return;
+        }
+
+        const marker = window.scrollY + nav.offsetHeight + 20;
+        let activeId = 'home';
+
+        for (const { id, el } of sections) {
+            if (el.offsetTop <= marker) {
+                activeId = id;
+            }
+        }
+
+        const isHome = activeId === 'home';
+        nav.classList.toggle('nav-collapsed', !isHome);
+
+        sections.forEach(({ id, li }) => {
+            li.classList.toggle('nav-active', id === activeId);
+        });
+    }
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(() => {
+                updateNav();
+                ticking = false;
+            });
+        }
+    }, { passive: true });
+
+    mobileQuery.addEventListener('change', updateNav);
+    updateNav();
+})();
+
+(function initBackToTop() {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'back-to-top';
+    button.setAttribute('aria-label', 'Back to top');
+    button.textContent = '↑';
+    document.body.appendChild(button);
+
+    const showAfter = 400;
+
+    function updateVisibility() {
+        button.classList.toggle('is-visible', window.scrollY > showAfter);
+    }
+
+    button.addEventListener('click', () => {
+        const home = document.getElementById('home');
+        if (home) {
+            home.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(() => {
+                updateVisibility();
+                ticking = false;
+            });
+        }
+    }, { passive: true });
+
+    updateVisibility();
+})();
