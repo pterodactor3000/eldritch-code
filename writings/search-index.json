@@ -1,11 +1,11 @@
 [
   {
     "slug": "best-large-array-filter",
-    "title": "The curse of the n-th survivor",
+    "title": "The rituals of the n-th survivor",
     "excerpt": "I needed to sever the **n-th remaining element** from a growing host - repeatedly, in order, without dragging the tail along on every cut. `splice` reads like the obvious rite on paper. At scale it be",
     "tags": [
       "javascript",
-      "algorithms",
+      "typescript",
       "performance",
       "fenwick-tree",
       "linked-list"

@@ -1,7 +1,7 @@
 ---
-title: "The curse of the n-th survivor"
+title: "The rituals of the n-th survivor"
 date: 2026-06-29
-tags: [javascript, algorithms, performance, fenwick-tree, linked-list]
+tags: [javascript, typescript, performance, fenwick-tree, linked-list]
 category: algorithms
 ---
 
@@ -13,7 +13,7 @@ When the first implementation called `Array.prototype.splice`, I assumed the run
 
 The trap is not correctness. Every approach below yields the same survivors. The trap is **shifting**: each removal slides every element after the cut one slot left. Perform that rite hundreds of thousands of times on a host that stays large, and you summon work that never needed to touch most of the data at all.
 
-## The immutable truths
+## Undeniable truths
 
 Given an input array, process each element in order:
 
@@ -27,7 +27,7 @@ Each severance rewrites what "2nd" or "3rd" means for the next invocation. That 
 
 ```
 Input:  [-3,  5, -1,  2, -4]
-         │       │       │
+          │       │       │
 Phase 1: gather the bound (negatives)
 Result: [-3, -1, -4]     positions:  1   2   3
 
@@ -36,7 +36,7 @@ Phase 2: apply the severance sigils (positives) in order
   2 → sever 2nd → [-3, -4]
 ```
 
-## The curse!
+## Where rites go awry...
 
 Naive `splice` on a dense array. Every severance copies the tail.
 
@@ -57,9 +57,9 @@ What the complexity oracle whispered - no fixture required, only the shape of th
 | Linked chain | O(k) walk + O(1) cut | O(removals × avg k) - gentle when k stays small |
 | Fenwick tally tree | O(log N) find + O(log N) update | O(removals × log N) - steady even when k grows |
 
-Same survivors. Different price. The naive rite is correct until the host grows vast enough to notice.
+Same survivors, different price. The naive rite is correct until the host grows vast enough to notice.
 
-## Cause of our demise
+## Poltergeist in the machine
 
 | Item | Detail |
 |------|--------|
@@ -69,24 +69,22 @@ Same survivors. Different price. The naive rite is correct until the host grows 
 | **At scale** | Removals × average host length → quadratic or worse in practice |
 | **What we actually need** | Locate the k-th survivor and banish it **without moving the rest** |
 
-Two structures answer that summons. Same goal. Different temperament.
+Two structures answer that summons. Same goal, different temperament.
 
----
-
-## Recommended way of making us whole - the chain of survivors
+## Ritual of completion - the Chain of Survivors
 
 **Idea:** Store the bound values as nodes in a doubly-linked chain. Each node remembers its neighbors. Severing a node is repointing two pointers - no array shifting, no tail dragged through the void.
 
 ```
 Initial host:    [-3] ←→ [-1] ←→ [-4]
-                  head              tail
-Position:          1      2      3
+                 head            tail
+Position:          1       2       3
 
 Severance n=2: walk 2 links from head → reach [-1] → unlink
 
 After:           [-3] ←→ [-4]
-                  head    tail
-Position:          1      2
+                 head    tail
+Position:          1       2
 ```
 
 **Unlinking** (O(1) - two pointers rewired):
@@ -105,16 +103,14 @@ Sever B:  ... ←→ [A] ←→ [C] ←→ ...
 
 **Good when:** k stays small on average. Easier to inscribe and to read.
 
----
-
-## Recommended way of making us whole - the tally tree
+## Another ritual of reconstruction - the Tally Tree
 
 **Idea:** Keep values in fixed slots that never move. A Binary Indexed Tree (Fenwick tree) tracks **how many survivors** live in each prefix. Data stays put - only alive flags and counts change.
 
 ```
 Original slots:  [0]  [1]  [2]  [3]  [4]   ← fixed indices, eternal
 Values:          -3   -1   -4   -7   -2
-Alive?             ✓    ✓    ✓    ✗    ✓
+Alive?           ✓    ✓    ✓    ✗    ✓
 
 Prefix counts (survivors up to index i):
   index:     0  1  2  3  4
@@ -130,7 +126,7 @@ Want k=2 (2nd survivor):
   "First quarter holds ≥2?"    → no, descend right
   ...
 
-  Answer: slot [1] holds -1   ← O(log N) steps through the tally
+  Answer: slot [1] holds -1    ← O(log N) steps through the tally
 ```
 
 **Banish slot [1]:** subtract 1 from every tree cell that covers index 1. The next `findKth` query reads the updated counts automatically.
@@ -154,9 +150,7 @@ Tree covers:     └─1─┘   └─3─┘   └─5─┘   └─7─┘
 
 **Good when:** k can land anywhere and you need predictable speed as N grows.
 
----
-
-## From different works, from libraries far and wide
+## The way the rituals work within the unknown
 
 Both paths refuse the `splice` trap. Neither drags trailing elements on severance.
 
@@ -176,7 +170,7 @@ Side by side:
 CHAIN                               TALLY TREE
 ─────                               ──────────
 
-[-3]→[-1]→[-4]                      slots: 0  1  2
+[-3]→[-1]→[-4]                      slots:  0  1  2
   │                                  alive: ✓  ✓  ✓
   walk 2 links                       counts in tree
   ↓                                  ↓
@@ -193,8 +187,6 @@ CHAIN:        repoint 2 pointers          → no copy
 TALLY TREE:   flip a flag + update counts → no copy
 ```
 
----
-
 ## Worked traces
 
 ### Example 1 - a small host
@@ -205,7 +197,7 @@ TALLY TREE:   flip a flag + update counts → no copy
 
 ```
 Result: [-10, -20, -30]
-         pos 1   2     3
+    pos    1    2    3
 ```
 
 **Severance sigils to apply (in order):** `2`, `1`
@@ -216,7 +208,7 @@ Initial cord (fixed slots, pointer links):
 
 ```
 head → [0:-10] → [1:-20] → [2:-30]
-        pos 1      pos 2      pos 3
+        pos 1     pos 2     pos 3
 ```
 
 | Step | Sigil | Action | Chain after |
@@ -232,7 +224,7 @@ Fixed slots with alive flags (data never moves):
 
 ```
 slot:   0      1       2
-value: -10   -20    -30
+value: -10    -20     -30
 alive:  ✓      ✓      ✓     aliveCount = 3
 ```
 
@@ -251,7 +243,7 @@ alive:  ✓      ✓      ✓     aliveCount = 3
 
 ```
 Result: [-3, -1, -4, -7]
-         pos 1   2   3   4
+    pos   1   2   3   4
 ```
 
 **Severance sigils to apply (in order):** `5`, `2`, `1`
@@ -262,7 +254,7 @@ Initial cord:
 
 ```
 head → [0:-3] → [1:-1] → [2:-4] → [3:-7]
-        pos 1     pos 2     pos 3     pos 4
+        pos 1    pos 2    pos 3    pos 4
 ```
 
 | Step | Sigil | Action | Chain after |
@@ -278,7 +270,7 @@ head → [0:-3] → [1:-1] → [2:-4] → [3:-7]
 ```
 slot:   0     1     2     3
 value: -3    -1    -4    -7
-alive:  ✓     ✓     ✓     ✓     aliveCount = 4
+alive: ✓     ✓     ✓     ✓     aliveCount = 4
 ```
 
 | Step | Sigil | Action | Alive after |
