@@ -4,18 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>The curse of Linear-Cursor MCP connection - Eldritch Code</title>
-    <meta
-      name="description"
-      content="I needed Linear in Cursor on Linux. The OAuth flow almost works, which is worse than it cleanly failing."
-    />
-    <meta
-      property="og:title"
-      content="The curse of Linear-Cursor MCP connection"
-    />
-    <meta
-      property="og:description"
-      content="I needed Linear in Cursor on Linux. The OAuth flow almost works, which is worse than it cleanly failing."
-    />
+    <meta name="description" content="I needed Linear in Cursor on Linux. The OAuth flow almost works, which is worse than it cleanly failing." />
+    <meta property="og:title" content="The curse of Linear-Cursor MCP connection" />
+    <meta property="og:description" content="I needed Linear in Cursor on Linux. The OAuth flow almost works, which is worse than it cleanly failing." />
     <meta property="og:type" content="article" />
     <link rel="icon" href="/sigil.png" type="image/x-icon" />
     <link rel="stylesheet" href="/styles.css" />
@@ -40,182 +31,113 @@
           <time datetime="2026-06-15">June 15, 2026</time>
           <span class="writings-meta-sep">·</span>
           <span>4 min read</span>
-          <span class="writings-meta-sep">·</span
-          ><span class="tag writings-category">configuration</span>
+          <span class="writings-meta-sep">·</span><span class="tag writings-category">configuration</span>
         </div>
-        <div class="writings-tags-inline">
-          <span class="tag writings-tag" data-tag="linear">linear</span
-          ><span class="tag writings-tag" data-tag="cursor">cursor</span
-          ><span class="tag writings-tag" data-tag="mcp">mcp</span
-          ><span class="tag writings-tag" data-tag="oauth">oauth</span
-          ><span class="tag writings-tag" data-tag="linux">linux</span
-          ><span class="tag writings-tag" data-tag="workaround"
-            >workaround</span
-          >
-        </div>
+        <div class="writings-tags-inline"><span class="tag writings-tag" data-tag="linear">linear</span><span class="tag writings-tag" data-tag="cursor">cursor</span><span class="tag writings-tag" data-tag="mcp">mcp</span><span class="tag writings-tag" data-tag="oauth">oauth</span><span class="tag writings-tag" data-tag="linux">linux</span><span class="tag writings-tag" data-tag="workaround">workaround</span></div>
       </header>
-      <div class="writings-prose">
-        <p>
-          I needed Linear in Cursor on Linux. The OAuth flow almost works, which
-          is worse than it cleanly failing.
-        </p>
-        <h2>Known unknowns</h2>
-        <p>
-          When the official Linear MCP plugin OAuth flow fails to complete, I
-          assumed I’d misconfigured something. I hadn’t.
-        </p>
-        <p>
-          Originally encountered on an Arch-based system, but this is a
-          <strong>known, Cursor-staff-confirmed Linux bug</strong> that also
-          reproduces on Ubuntu, Debian, and Fedora across <code>.deb</code>,
-          <code>.rpm</code>, and <code>.AppImage</code> installs.
-        </p>
-        <h2>The immutable truths</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Step</th>
-              <th>Detail</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Cursor</td>
-              <td>
-                Installed as an <code>.AppImage</code> on an Arch-based
-                distribution
-              </td>
-            </tr>
-            <tr>
-              <td>Linear account</td>
-              <td>Required for integration</td>
-            </tr>
-            <tr>
-              <td>Linear plugin</td>
-              <td>Installed in Cursor (Settings → MCP)</td>
-            </tr>
-          </tbody>
-        </table>
-        <h2>The curse!</h2>
-        <p>
-          Official Linear MCP tool uses browser OAuth. On Linux, that goes wrong
-          fast. The sequence:
-        </p>
-        <ol>
-          <li><strong>Settings → MCP → Linear → Connect</strong>.</li>
-          <li>Browser opens; you approve.</li>
-          <li>
-            Browser asks to hand the <code>cursor://</code> URL back to Cursor -
-            allow it
-          </li>
-          <li>
-            A second Cursor appears. No memory of the flow you just finished.
-          </li>
-        </ol>
-        <p>
-          The handler fires. The other Cursor wakes up. Auth never lands. From
-          the UI it looks like you never authorized, even though you did.
-        </p>
-        <p>
-          Even given that, the curse not only makes the Linear MCP tools lose
-          their minds. Notion breaks the same way. Same
-          <code>cursor://</code> redirect. <em>Same new window.</em>
-        </p>
-        <h2>Cause of our demise</h2>
-        <p>
-          The scheme handler exists. The failure is that the callback is
-          delivered to a <strong>fresh body</strong>. And that body knows not of
-          the handshake in motion.
-        </p>
-        <table>
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Detail</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Flow</strong></td>
-              <td>
-                Browser-based OAuth → <code>cursor://</code> deep-link callback
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Expected behavior</strong></td>
-              <td>Callback attaches auth to the existing Cursor instance</td>
-            </tr>
-            <tr>
-              <td><strong>Actual behavior</strong></td>
-              <td>
-                Callback spawns a fresh Cursor window with no MCP auth state
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Scheme handler</strong></td>
-              <td>
-                <code>x-scheme-handler/cursor</code> is registered - not a
-                missing-handler issue
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Impact</strong></td>
-              <td>
-                Official plugin <strong>Connect</strong> button cannot finish
-                authorization
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <p>Notes from the forum:</p>
-        <table>
-          <thead>
-            <tr>
-              <th>Command</th>
-              <th>Result</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>xdg-open 'cursor://test'</code></td>
-              <td>Opens a <strong>new</strong> window</td>
-            </tr>
-            <tr>
-              <td><code>gio open 'cursor://test'</code></td>
-              <td>Opens a <strong>new</strong> window</td>
-            </tr>
-            <tr>
-              <td>
-                <code>/usr/share/cursor/cursor --open-url 'cursor://test'</code>
-              </td>
-              <td>
-                Does <strong>not</strong> open a new window (routes to the
-                existing instance)
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <p>What the logs said:</p>
-        <pre
-          class="hljs"
-        ><code class="language-text">OAuth provider needs auth callback during connection
+      <div class="writings-prose"><p>I needed Linear in Cursor on Linux. The OAuth flow almost works, which is worse than it cleanly failing.</p>
+<h2>Known unknowns</h2>
+<p>When the official Linear MCP plugin OAuth flow fails to complete, I assumed I’d misconfigured something. I hadn’t.</p>
+<p>Originally encountered on an Arch-based system, but this is a <strong>known, Cursor-staff-confirmed Linux bug</strong> that also reproduces on Ubuntu, Debian, and Fedora across <code>.deb</code>, <code>.rpm</code>, and <code>.AppImage</code> installs.</p>
+<h2>The immutable truths</h2>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cursor</td>
+<td>Installed as an <code>.AppImage</code> on an Arch-based distribution</td>
+</tr>
+<tr>
+<td>Linear account</td>
+<td>Required for integration</td>
+</tr>
+<tr>
+<td>Linear plugin</td>
+<td>Installed in Cursor (Settings → MCP)</td>
+</tr>
+</tbody>
+</table>
+<h2>The curse!</h2>
+<p>Official Linear MCP tool uses browser OAuth. On Linux, that goes wrong fast. The sequence:</p>
+<ol>
+<li><strong>Settings → MCP → Linear → Connect</strong>.</li>
+<li>Browser opens; you approve.</li>
+<li>Browser asks to hand the <code>cursor://</code> URL back to Cursor - allow it</li>
+<li>A second Cursor appears. No memory of the flow you just finished.</li>
+</ol>
+<p>The handler fires. The other Cursor wakes up. Auth never lands. From the UI it looks like you never authorized, even though you did.</p>
+<p>Even given that, the curse not only makes the Linear MCP tools lose their minds. Notion breaks the same way. Same <code>cursor://</code> redirect. <em>Same new window.</em></p>
+<h2>Cause of our demise</h2>
+<p>The scheme handler exists. The failure is that the callback is delivered to a <strong>fresh body</strong>. And that body knows not of the handshake in motion.</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Flow</strong></td>
+<td>Browser-based OAuth → <code>cursor://</code> deep-link callback</td>
+</tr>
+<tr>
+<td><strong>Expected behavior</strong></td>
+<td>Callback attaches auth to the existing Cursor instance</td>
+</tr>
+<tr>
+<td><strong>Actual behavior</strong></td>
+<td>Callback spawns a fresh Cursor window with no MCP auth state</td>
+</tr>
+<tr>
+<td><strong>Scheme handler</strong></td>
+<td><code>x-scheme-handler/cursor</code> is registered - not a missing-handler issue</td>
+</tr>
+<tr>
+<td><strong>Impact</strong></td>
+<td>Official plugin <strong>Connect</strong> button cannot finish authorization</td>
+</tr>
+</tbody>
+</table>
+<p>Notes from the forum:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>xdg-open 'cursor://test'</code></td>
+<td>Opens a <strong>new</strong> window</td>
+</tr>
+<tr>
+<td><code>gio open 'cursor://test'</code></td>
+<td>Opens a <strong>new</strong> window</td>
+</tr>
+<tr>
+<td><code>/usr/share/cursor/cursor --open-url 'cursor://test'</code></td>
+<td>Does <strong>not</strong> open a new window (routes to the existing instance)</td>
+</tr>
+</tbody>
+</table>
+<p>What the logs said:</p>
+<pre class="hljs"><code class="language-text">OAuth provider needs auth callback during connection
 Connect failed after auth_required; returning needsAuth
 </code></pre>
-        <h2>Recommended way of making us whole</h2>
-        <p>
-          The API key route sidesteps the browser entirely. No callback, no twin
-          window.
-        </p>
-        <h3>1. Remove the problem</h3>
-        <p>
-          In <strong>Settings → MCP</strong>, remove or disable the Linear
-          plugin.
-        </p>
-        <h3>2. Create your own connection</h3>
-        <p>Click <strong>Add custom MCP</strong> and copy the following:</p>
-        <pre
-          class="hljs"
-        ><code class="language-json"><span class="hljs-punctuation">{</span>
+<h2>Recommended way of making us whole</h2>
+<p>The API key route sidesteps the browser entirely. No callback, no twin window.</p>
+<h3>1. Remove the problem</h3>
+<p>In <strong>Settings → MCP</strong>, remove or disable the Linear plugin.</p>
+<h3>2. Create your own connection</h3>
+<p>Click <strong>Add custom MCP</strong> and copy the following:</p>
+<pre class="hljs"><code class="language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"mcpServers"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"linear"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
       <span class="hljs-attr">"command"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"npx"</span><span class="hljs-punctuation">,</span>
@@ -227,136 +149,71 @@ Connect failed after auth_required; returning needsAuth
   <span class="hljs-punctuation">}</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
-        <p>
-          Replace <code>&lt;API_KEY&gt;</code> with a personal API key from
-          Linear:
-        </p>
-        <p>
-          <strong
-            >Linear → Settings → Security &amp; access → New personal API
-            key</strong
-          >
-        </p>
-        <p>As per other forum posts:</p>
-        <blockquote>
-          <p>
-            <strong>Alternative server command.</strong> Cursor staff suggested
-            the local Linear server package instead of the
-            <code>mcp-remote</code> proxy. Either works; pick one:
-          </p>
-          <pre
-            class="hljs"
-          ><code class="language-json"><span class="hljs-attr">"args"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">"-y"</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"@linear/mcp-server"</span><span class="hljs-punctuation">]</span>
+<p>Replace <code>&lt;API_KEY&gt;</code> with a personal API key from Linear:</p>
+<p><strong>Linear → Settings → Security &amp; access → New personal API key</strong></p>
+<p>As per other forum posts:</p>
+<blockquote>
+<p><strong>Alternative server command.</strong> Cursor staff suggested the local Linear server package instead of the <code>mcp-remote</code> proxy. Either works; pick one:</p>
+<pre class="hljs"><code class="language-json"><span class="hljs-attr">"args"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">"-y"</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"@linear/mcp-server"</span><span class="hljs-punctuation">]</span>
 </code></pre>
-        </blockquote>
-        <h3>3. Revive the Cursor</h3>
-        <p>
-          Restart Cursor if need be. Then confirm the Linear MCP sigils show as
-          connected in <strong>Settings → MCP</strong>.
-        </p>
-        <h2>From different works, from libraries far and wide</h2>
-        <p>
-          If you want to keep OAuth, the browser has to hand
-          <code>cursor://</code> to the running Cursor, not spawn another.
-          AppImage installs often lack a handler that does that. Register one
-          with <code>--open-url</code>:
-        </p>
-        <ol>
-          <li>
-            Create
-            <code>~/.local/share/applications/cursor-url-handler.desktop</code>:
-          </li>
-        </ol>
-        <pre
-          class="hljs"
-        ><code class="language-ini"><span class="hljs-section">[Desktop Entry]</span>
+</blockquote>
+<h3>3. Revive the Cursor</h3>
+<p>Restart Cursor if need be. Then confirm the Linear MCP sigils show as connected in <strong>Settings → MCP</strong>.</p>
+<h2>From different works, from libraries far and wide</h2>
+<p>If you want to keep OAuth, the browser has to hand <code>cursor://</code> to the running Cursor, not spawn another. AppImage installs often lack a handler that does that. Register one with <code>--open-url</code>:</p>
+<ol>
+<li>Create <code>~/.local/share/applications/cursor-url-handler.desktop</code>:</li>
+</ol>
+<pre class="hljs"><code class="language-ini"><span class="hljs-section">[Desktop Entry]</span>
 <span class="hljs-attr">Name</span>=Cursor URL Handler
 <span class="hljs-attr">Exec</span>=/path/to/cursor --open-url %U
 <span class="hljs-attr">Type</span>=Application
 <span class="hljs-attr">NoDisplay</span>=<span class="hljs-literal">true</span>
 <span class="hljs-attr">MimeType</span>=x-scheme-handler/cursor<span class="hljs-comment">;</span>
 </code></pre>
-        <p>
-          Replace <code>/path/to/cursor</code> with your AppImage path (or
-          <code>/usr/share/cursor/cursor</code> for <code>.deb</code>/<code
-            >.rpm</code
-          >
-          installs).
-        </p>
-        <ol>
-          <li>Acknowledge the scheme:</li>
-        </ol>
-        <pre
-          class="hljs"
-        ><code class="language-bash">xdg-mime default cursor-url-handler.desktop <span class="hljs-string">'x-scheme-handler/cursor'</span>
+<p>Replace <code>/path/to/cursor</code> with your AppImage path (or <code>/usr/share/cursor/cursor</code> for <code>.deb</code>/<code>.rpm</code> installs).</p>
+<ol>
+<li>Acknowledge the scheme:</li>
+</ol>
+<pre class="hljs"><code class="language-bash">xdg-mime default cursor-url-handler.desktop <span class="hljs-string">'x-scheme-handler/cursor'</span>
 </code></pre>
-        <blockquote>
-          <p>
-            <strong>Caveat.</strong> Some browsers (e.g. Edge) do not invoke
-            <code>xdg-open</code> the same way, so this workaround is not fully
-            reliable. The API-key approach above avoids the callback altogether
-            and is the more robust fix.
-          </p>
-        </blockquote>
-        <h2>Why would this way work?</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Approach</th>
-              <th>Auth method</th>
-              <th>Linux deep-link impact</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Official plugin</td>
-              <td>OAuth via browser + <code>cursor://</code> callback</td>
-              <td>Broken - callback opens a new window and loses context</td>
-            </tr>
-            <tr>
-              <td>Custom MCP + API key</td>
-              <td><code>LINEAR_API_KEY</code> in env</td>
-              <td>
-                No browser redirect; works regardless of how Cursor is launched
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <h2>Beware of the unseen</h2>
-        <p>
-          I keep MCP keys out of repos. If one leaks, I revoke it and rebind -
-          same as any other token.
-        </p>
-        <h2>Grimoires and scrolls used in esoteric research</h2>
-        <ul>
-          <li>
-            <a
-              href="https://forum.cursor.com/t/mcp-oauth-not-completing-on-ubuntu-cursor-callback-opens-new-window/158832"
-              >MCP OAuth not completing on Ubuntu (cursor:// callback opens new
-              window) - Cursor Community Forum</a
-            >
-            Forum thread, confirmed new-window behavior on Ubuntu/Debian; staff
-            pointed to the API-key path.
-          </li>
-          <li>
-            <a href="https://forum.cursor.com/t/oauth-mcp-login-fails/135488/18"
-              >OAuth MCP login fails - Cursor Community Forum</a
-            >
-            Second thread, Fedora/KDE + AppImage; documents the
-            <code>--open-url</code> desktop entry.
-          </li>
-        </ul>
-      </div>
+<blockquote>
+<p><strong>Caveat.</strong> Some browsers (e.g. Edge) do not invoke <code>xdg-open</code> the same way, so this workaround is not fully reliable. The API-key approach above avoids the callback altogether and is the more robust fix.</p>
+</blockquote>
+<h2>Why would this way work?</h2>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Auth method</th>
+<th>Linux deep-link impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Official plugin</td>
+<td>OAuth via browser + <code>cursor://</code> callback</td>
+<td>Broken - callback opens a new window and loses context</td>
+</tr>
+<tr>
+<td>Custom MCP + API key</td>
+<td><code>LINEAR_API_KEY</code> in env</td>
+<td>No browser redirect; works regardless of how Cursor is launched</td>
+</tr>
+</tbody>
+</table>
+<h2>Beware of the unseen</h2>
+<p>I keep MCP keys out of repos. If one leaks, I revoke it and rebind - same as any other token.</p>
+<h2>Grimoires and scrolls used in esoteric research</h2>
+<ul>
+<li><a href="https://forum.cursor.com/t/mcp-oauth-not-completing-on-ubuntu-cursor-callback-opens-new-window/158832">MCP OAuth not completing on Ubuntu (cursor:// callback opens new window) - Cursor Community Forum</a> Forum thread, confirmed new-window behavior on Ubuntu/Debian; staff pointed to the API-key path.</li>
+<li><a href="https://forum.cursor.com/t/oauth-mcp-login-fails/135488/18">OAuth MCP login fails - Cursor Community Forum</a> Second thread, Fedora/KDE + AppImage; documents the <code>--open-url</code> desktop entry.</li>
+</ul>
+</div>
       <aside class="writings-related">
-        <h2>Related Writings</h2>
-        <ul>
-          <li>
-            <a href="/writings/playwright-chromium-on-arch/"
-              >The curse of Playwright CLI and Chromium on Arch</a
-            >
-          </li>
-        </ul>
-      </aside>
+    <h2>Related Writings</h2>
+    <ul><li><a href="/writings/playwright-chromium-on-arch/">The curse of Playwright CLI and Chromium on Arch</a></li></ul>
+  </aside>
     </article>
 
     <footer>

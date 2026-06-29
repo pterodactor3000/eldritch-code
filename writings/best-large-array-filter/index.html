@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The curse of the n-th survivor - Eldritch Code</title>
+    <meta name="description" content="I needed to sever the **n-th remaining element** from a growing host — repeatedly, in order, without dragging the tail along on every cut. `splice` reads like the obvious rite on paper. At scale it be" />
+    <meta property="og:title" content="The curse of the n-th survivor" />
+    <meta property="og:description" content="I needed to sever the **n-th remaining element** from a growing host — repeatedly, in order, without dragging the tail along on every cut. `splice` reads like the obvious rite on paper. At scale it be" />
+    <meta property="og:type" content="article" />
+    <link rel="icon" href="/sigil.png" type="image/x-icon" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+
+  <body>
+    <div class="cosmic-void"></div>
+    <div class="tentacles"></div>
+
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/writings/">Writings</a></li>
+      </ul>
+    </nav>
+
+    <article class="writings-post">
+      <header class="writings-post-header">
+        <a href="/writings/" class="writings-back">← Back to the Archives</a>
+        <h1>The curse of the n-th survivor</h1>
+        <div class="writings-meta">
+          <time datetime="2026-06-29">June 29, 2026</time>
+          <span class="writings-meta-sep">·</span>
+          <span>10 min read</span>
+          <span class="writings-meta-sep">·</span><span class="tag writings-category">algorithms</span>
+        </div>
+        <div class="writings-tags-inline"><span class="tag writings-tag" data-tag="javascript">javascript</span><span class="tag writings-tag" data-tag="algorithms">algorithms</span><span class="tag writings-tag" data-tag="performance">performance</span><span class="tag writings-tag" data-tag="fenwick-tree">fenwick-tree</span><span class="tag writings-tag" data-tag="linked-list">linked-list</span></div>
+      </header>
+      <div class="writings-prose"><p>I needed to sever the <strong>n-th remaining element</strong> from a growing host — repeatedly, in order, without dragging the tail along on every cut. <code>splice</code> reads like the obvious rite on paper. At scale it becomes a slow ritual of copies, each one paid in full.</p>
+<h2>Known unknowns</h2>
+<p>When the first implementation called <code>Array.prototype.splice</code>, I assumed the runtime would stay tractable. It didn't.</p>
+<p>The trap is not correctness. Every approach below yields the same survivors. The trap is <strong>shifting</strong>: each removal slides every element after the cut one slot left. Perform that rite hundreds of thousands of times on a host that stays large, and you summon work that never needed to touch most of the data at all.</p>
+<h2>The immutable truths</h2>
+<p>Given an input array, process each element in order:</p>
+<table>
+<thead>
+<tr>
+<th>Sigil</th>
+<th>Rite</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>n &lt; 0</strong></td>
+<td>Bind the value into <code>result</code></td>
+</tr>
+<tr>
+<td><strong>n &gt; 0</strong></td>
+<td>Sever the <strong>n-th remaining</strong> survivor from <code>result</code> (1-indexed), if still in bounds</td>
+</tr>
+<tr>
+<td><strong>n = 0</strong></td>
+<td>Pass in silence</td>
+</tr>
+</tbody>
+</table>
+<p>Each severance rewrites what "2nd" or "3rd" means for the next invocation. That shifting semantics is the whole curse.</p>
+<pre class="hljs"><code>Input:  [-3,  5, -1,  2, -4]
+         │       │       │
+Phase 1: gather the bound (negatives)
+Result: [-3, -1, -4]     positions:  1   2   3
+
+Phase 2: apply the severance sigils (positives) in order
+  5 → only 3 survivors → skip
+  2 → sever 2nd → [-3, -4]
+</code></pre>
+<h2>The curse!</h2>
+<p>Naive <code>splice</code> on a dense array. Every severance copies the tail.</p>
+<pre class="hljs"><code>SPLICE on array:
+[-3, -1, -4, -7, -2]
+      ↑ sever index 1
+[-3, -4, -7, -2]     ← every element after index 1 DRAGGED left
+
+× many removals × large N = a quadratic toll in practice
+</code></pre>
+<p>What the complexity oracle whispered — no fixture required, only the shape of the work:</p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Per severance</th>
+<th>Accumulated toll (rough)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>splice</code> on array</td>
+<td>O(N) tail copy</td>
+<td>O(removals × N) — punishing when both stay large</td>
+</tr>
+<tr>
+<td>Linked chain</td>
+<td>O(k) walk + O(1) cut</td>
+<td>O(removals × avg k) — gentle when k stays small</td>
+</tr>
+<tr>
+<td>Fenwick tally tree</td>
+<td>O(log N) find + O(log N) update</td>
+<td>O(removals × log N) — steady even when k grows</td>
+</tr>
+</tbody>
+</table>
+<p>Same survivors. Different price. The naive rite is correct until the host grows vast enough to notice.</p>
+<h2>Cause of our demise</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Operation</strong></td>
+<td>Sever the k-th <em>remaining</em> survivor from a live collection</td>
+</tr>
+<tr>
+<td><strong>Naive rite</strong></td>
+<td><code>result.splice(k - 1, 1)</code> on a JavaScript array</td>
+</tr>
+<tr>
+<td><strong>Per-severance cost</strong></td>
+<td>O(N) — every trailing element shifts left</td>
+</tr>
+<tr>
+<td><strong>At scale</strong></td>
+<td>Removals × average host length → quadratic or worse in practice</td>
+</tr>
+<tr>
+<td><strong>What we actually need</strong></td>
+<td>Locate the k-th survivor and banish it <strong>without moving the rest</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Two structures answer that summons. Same goal. Different temperament.</p>
+<hr />
+<h2>Recommended way of making us whole — the chain of survivors</h2>
+<p><strong>Idea:</strong> Store the bound values as nodes in a doubly-linked chain. Each node remembers its neighbors. Severing a node is repointing two pointers — no array shifting, no tail dragged through the void.</p>
+<pre class="hljs"><code>Initial host:    [-3] ←→ [-1] ←→ [-4]
+                  head              tail
+Position:          1      2      3
+
+Severance n=2: walk 2 links from head → reach [-1] → unlink
+
+After:           [-3] ←→ [-4]
+                  head    tail
+Position:          1      2
+</code></pre>
+<p><strong>Unlinking</strong> (O(1) — two pointers rewired):</p>
+<pre class="hljs"><code>Before:   ... ←→ [A] ←→ [B] ←→ [C] ←→ ...
+Sever B:  ... ←→ [A] ←→ [C] ←→ ...
+              A.next = C
+              C.prev = A
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Find k-th</td>
+<td>Walk k links from head</td>
+<td>O(k)</td>
+</tr>
+<tr>
+<td>Sever</td>
+<td>Rewire prev/next</td>
+<td>O(1)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Good when:</strong> k stays small on average. Easier to inscribe and to read.</p>
+<hr />
+<h2>Recommended way of making us whole — the tally tree</h2>
+<p><strong>Idea:</strong> Keep values in fixed slots that never move. A Binary Indexed Tree (Fenwick tree) tracks <strong>how many survivors</strong> live in each prefix. Data stays put — only alive flags and counts change.</p>
+<pre class="hljs"><code>Original slots:  [0]  [1]  [2]  [3]  [4]   ← fixed indices, eternal
+Values:          -3   -1   -4   -7   -2
+Alive?             ✓    ✓    ✓    ✗    ✓
+
+Prefix counts (survivors up to index i):
+  index:     0  1  2  3  4
+  alive:     1  2  3  3  4
+</code></pre>
+<p><strong>Find 2nd alive:</strong> binary search on the tree — "where does the prefix count first reach 2?"</p>
+<pre class="hljs"><code>Want k=2 (2nd survivor):
+
+  "First half holds ≥2 alive?" → yes, descend left
+  "First quarter holds ≥2?"    → no, descend right
+  ...
+
+  Answer: slot [1] holds -1   ← O(log N) steps through the tally
+</code></pre>
+<p><strong>Banish slot [1]:</strong> subtract 1 from every tree cell that covers index 1. The next <code>findKth</code> query reads the updated counts automatically.</p>
+<p><strong>Tree structure (conceptual):</strong> each index <code>i</code> contributes its count to tree cells at <code>i, i+2, i+4, ...</code> (the <code>i &amp; -i</code> pattern):</p>
+<pre class="hljs"><code>Array indices:  1   2   3   4   5   6   7   8
+                 │   │   │   │   │   │   │   │
+Tree covers:     └─1─┘   └─3─┘   └─5─┘   └─7─┘
+                     └─2─┘           └─6─┘
+                         └────4────┘       └─8─┘
+                             └────────8────────┘
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>What it does</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>findKth(k)</code></td>
+<td>Binary lift on prefix sums</td>
+<td>O(log N)</td>
+</tr>
+<tr>
+<td><code>add(i, -1)</code></td>
+<td>Decrement counts for index i</td>
+<td>O(log N)</td>
+</tr>
+<tr>
+<td>Build final array</td>
+<td>One pass, skip the banished</td>
+<td>O(N)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Good when:</strong> k can land anywhere and you need predictable speed as N grows.</p>
+<hr />
+<h2>From different works, from libraries far and wide</h2>
+<p>Both paths refuse the <code>splice</code> trap. Neither drags trailing elements on severance.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Chain of Survivors</th>
+<th>Tally Tree</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Mental model</strong></td>
+<td>Beads on a cord — follow links to the k-th, then snip</td>
+<td>Fixed slots + a counter tree — leap to the k-th alive index</td>
+</tr>
+<tr>
+<td><strong>Data movement</strong></td>
+<td>None (repoint pointers)</td>
+<td>None (flip flags, update counts)</td>
+</tr>
+<tr>
+<td><strong>Find k-th alive</strong></td>
+<td>Walk k links from head</td>
+<td>Binary search on prefix sums</td>
+</tr>
+<tr>
+<td><strong>Sever</strong></td>
+<td>Rewire prev/next</td>
+<td>Mark banished + decrement tree</td>
+</tr>
+<tr>
+<td><strong>Cost per severance</strong></td>
+<td>O(k)</td>
+<td>O(log N)</td>
+</tr>
+<tr>
+<td><strong>Inscription complexity</strong></td>
+<td>Lower</td>
+<td>Higher (tree class)</td>
+</tr>
+<tr>
+<td><strong>Best for</strong></td>
+<td>Small average k</td>
+<td>Large k, predictable performance at scale</td>
+</tr>
+</tbody>
+</table>
+<p>Side by side:</p>
+<pre class="hljs"><code>CHAIN                               TALLY TREE
+─────                               ──────────
+
+[-3]→[-1]→[-4]                      slots: 0  1  2
+  │                                  alive: ✓  ✓  ✓
+  walk 2 links                       counts in tree
+  ↓                                  ↓
+[-3]→[-4]                            findKth(2) → index 1
+                                     mark banished, update counts
+
+Motion: follow pointers             Motion: jump using tree sums
+Cost per severance: O(k)            Cost per severance: O(log N)
+Simpler inscription                 Steadier at scale
+</code></pre>
+<pre class="hljs"><code>CHAIN:        repoint 2 pointers          → no copy
+TALLY TREE:   flip a flag + update counts → no copy
+</code></pre>
+<hr />
+<h2>Worked traces</h2>
+<h3>Example 1 — a small host</h3>
+<p><strong>Input:</strong> <code>[-10, 2, -20, 1, -30]</code></p>
+<p><strong>Phase 1 — gather the bound:</strong></p>
+<pre class="hljs"><code>Result: [-10, -20, -30]
+         pos 1   2     3
+</code></pre>
+<p><strong>Severance sigils to apply (in order):</strong> <code>2</code>, <code>1</code></p>
+<h4>Chain trace</h4>
+<p>Initial cord (fixed slots, pointer links):</p>
+<pre class="hljs"><code>head → [0:-10] → [1:-20] → [2:-30]
+        pos 1      pos 2      pos 3
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Sigil</th>
+<th>Action</th>
+<th>Chain after</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>2</code></td>
+<td>Walk 2 links: <code>0→1</code>, unlink slot 1 (<code>-20</code>)</td>
+<td><code>[0:-10] → [2:-30]</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>1</code></td>
+<td>Walk 1 link: slot 0, unlink (<code>-10</code>)</td>
+<td><code>[2:-30]</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Final survivors:</strong> <code>[-30]</code></p>
+<h4>Tally tree trace</h4>
+<p>Fixed slots with alive flags (data never moves):</p>
+<pre class="hljs"><code>slot:   0      1       2
+value: -10   -20    -30
+alive:  ✓      ✓      ✓     aliveCount = 3
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Sigil</th>
+<th>Action</th>
+<th>Alive after</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>2</code></td>
+<td><code>findKth(2)</code> → slot 1 (<code>-20</code>), mark banished</td>
+<td>slots 0, 2 alive → <code>[-10, -30]</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>1</code></td>
+<td><code>findKth(1)</code> → slot 0 (<code>-10</code>), mark banished</td>
+<td>slot 2 alive → <code>[-30]</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Final survivors:</strong> <code>[-30]</code></p>
+<h3>Example 2 — severance sigils out of reach</h3>
+<p><strong>Input:</strong> <code>[-3, 5, -1, 2, -4, 1, -7]</code></p>
+<p><strong>Phase 1 — gather the bound:</strong></p>
+<pre class="hljs"><code>Result: [-3, -1, -4, -7]
+         pos 1   2   3   4
+</code></pre>
+<p><strong>Severance sigils to apply (in order):</strong> <code>5</code>, <code>2</code>, <code>1</code></p>
+<h4>Chain trace</h4>
+<p>Initial cord:</p>
+<pre class="hljs"><code>head → [0:-3] → [1:-1] → [2:-4] → [3:-7]
+        pos 1     pos 2     pos 3     pos 4
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Sigil</th>
+<th>Action</th>
+<th>Chain after</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>5</code></td>
+<td>Skip — position ≥ length (4)</td>
+<td>unchanged</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>2</code></td>
+<td>Walk 2 links: <code>0→1</code>, unlink slot 1 (<code>-1</code>)</td>
+<td><code>[0:-3] → [2:-4] → [3:-7]</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>1</code></td>
+<td>Walk 1 link: slot 0, unlink (<code>-3</code>)</td>
+<td><code>[2:-4] → [3:-7]</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Final survivors:</strong> <code>[-4, -7]</code></p>
+<h4>Tally tree trace</h4>
+<pre class="hljs"><code>slot:   0     1     2     3
+value: -3    -1    -4    -7
+alive:  ✓     ✓     ✓     ✓     aliveCount = 4
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Sigil</th>
+<th>Action</th>
+<th>Alive after</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>5</code></td>
+<td>Skip — position ≥ alive count (4)</td>
+<td>unchanged</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>2</code></td>
+<td><code>findKth(2)</code> → slot 1 (<code>-1</code>), mark banished</td>
+<td>slots 0, 2, 3 → <code>[-3, -4, -7]</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>1</code></td>
+<td><code>findKth(1)</code> → slot 0 (<code>-3</code>), mark banished</td>
+<td>slots 2, 3 → <code>[-4, -7]</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Final survivors:</strong> <code>[-4, -7]</code></p>
+<hr />
+<h2>Why would this way work?</h2>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Find k-th survivor</th>
+<th>Sever</th>
+<th>When it wins</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>splice</code> on array</td>
+<td>O(1) index access</td>
+<td>O(N) tail copy</td>
+<td>Never at this scale</td>
+</tr>
+<tr>
+<td>Chain of survivors</td>
+<td>O(k) walk from head</td>
+<td>O(1) pointer rewire</td>
+<td>Small average k; simpler inscription</td>
+</tr>
+<tr>
+<td>Tally tree</td>
+<td>O(log N) prefix search</td>
+<td>O(log N) count update</td>
+<td>Large k; predictable bounds as N grows</td>
+</tr>
+</tbody>
+</table>
+<p>The chain is the readable default — the first rite I inscribe when k tends to stay modest. The tally tree is the one I reach for when severance sigils can land anywhere in a host that refuses to shrink — same survivors, but the toll stays logarithmic instead of linear in N.</p>
+<h2>Beware of the unseen</h2>
+<ul>
+<li><strong>1-indexed k.</strong> The spec counts survivors from 1, not 0. Off-by-one here silently corrupts the host.</li>
+<li><strong>Out-of-bounds sigils.</strong> If k exceeds the current survivor count, skip — do not wrap or clamp.</li>
+<li><strong>Phase order matters.</strong> Gather all negatives first, then apply positives in input order. Reversing the phases changes the answer entirely.</li>
+<li><strong>Tally tree overhead.</strong> Inscribing and maintaining the tree class costs more lines than a chain. Only worth the effort when k or N forces your hand.</li>
+</ul>
+<h2>Grimoires and scrolls used in esoteric research</h2>
+<ul>
+<li>Peter Fenwick, <em>A New Data Structure for Cumulative Frequency Tables</em> (1994) — the tally tree / Binary Indexed Tree for O(log N) prefix queries and point updates.</li>
+<li>Doubly-linked list — the chain of survivors; pointer rewire as O(1) severance without array shifting.</li>
+</ul>
+</div>
+      
+    </article>
+
+    <footer>
+      <p>
+        "That is not dead which can eternal lie, and with strange aeons even
+        death may die."
+      </p>
+      <p style="margin-top: 1rem; font-size: 0.9rem">
+        © 2026 Eldritch Code. All rights reserved in this dimension and beyond.
+      </p>
+    </footer>
+
+    <script src="/script.js"></script>
+  </body>
+</html>
