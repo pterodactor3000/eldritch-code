@@ -59,7 +59,7 @@ Cap this section at **10 items**; prefer oldest `updatedAt` first. Mention trunc
 
 ## Active states
 
-Treat as active (eligible for radar / recommendations): anything that is not Done, Canceled, or Duplicate. Resolve exact names via the provider's status-list tool — do not hardcode team-specific state IDs.
+Treat as active (eligible for radar / recommendations): anything that is not Done, Canceled, or Duplicate. Resolve exact names via the provider's status-list tool - do not hardcode team-specific state IDs.
 
 ## Staleness
 

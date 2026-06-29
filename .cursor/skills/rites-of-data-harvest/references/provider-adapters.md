@@ -1,6 +1,6 @@
 # Provider Adapters
 
-Map each MCP provider to the common issue shape before applying triage rules. Read tool schemas first — names below are typical, not guaranteed.
+Map each MCP provider to the common issue shape before applying triage rules. Read tool schemas first - names below are typical, not guaranteed.
 
 ## Discovery signals
 
@@ -30,11 +30,11 @@ If the provider lacks relations, rely on labels and state names only.
 
 Use the smallest number of calls that cover all sections:
 
-1. **Statuses/labels** — one call to map done/canceled/review states before filtering.
-2. **My active work** — list issues assigned to current user; exclude done/canceled.
-3. **Review queue** — list issues in review-ready states (team-wide if user asked for team scope).
-4. **Team radar** — list unassigned or stale issues when scope is team/project; use provider date filters when available (e.g. `updatedAt: "-P14D"`).
-5. **Blocking detail** — fetch relations only for issues that might be blocked (label/state/title signals), not for every issue.
+1. **Statuses/labels** - one call to map done/canceled/review states before filtering.
+2. **My active work** - list issues assigned to current user; exclude done/canceled.
+3. **Review queue** - list issues in review-ready states (team-wide if user asked for team scope).
+4. **Team radar** - list unassigned or stale issues when scope is team/project; use provider date filters when available (e.g. `updatedAt: "-P14D"`).
+5. **Blocking detail** - fetch relations only for issues that might be blocked (label/state/title signals), not for every issue.
 
 Paginate until all in-scope active issues are retrieved or the user capped the scope.
 

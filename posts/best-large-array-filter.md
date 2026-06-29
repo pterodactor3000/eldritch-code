@@ -5,7 +5,7 @@ tags: [javascript, algorithms, performance, fenwick-tree, linked-list]
 category: algorithms
 ---
 
-I needed to sever the **n-th remaining element** from a growing host — repeatedly, in order, without dragging the tail along on every cut. `splice` reads like the obvious rite on paper. At scale it becomes a slow ritual of copies, each one paid in full.
+I needed to sever the **n-th remaining element** from a growing host - repeatedly, in order, without dragging the tail along on every cut. `splice` reads like the obvious rite on paper. At scale it becomes a slow ritual of copies, each one paid in full.
 
 ## Known unknowns
 
@@ -49,13 +49,13 @@ SPLICE on array:
 × many removals × large N = a quadratic toll in practice
 ```
 
-What the complexity oracle whispered — no fixture required, only the shape of the work:
+What the complexity oracle whispered - no fixture required, only the shape of the work:
 
 | Approach | Per severance | Accumulated toll (rough) |
 |----------|---------------|--------------------------|
-| `splice` on array | O(N) tail copy | O(removals × N) — punishing when both stay large |
-| Linked chain | O(k) walk + O(1) cut | O(removals × avg k) — gentle when k stays small |
-| Fenwick tally tree | O(log N) find + O(log N) update | O(removals × log N) — steady even when k grows |
+| `splice` on array | O(N) tail copy | O(removals × N) - punishing when both stay large |
+| Linked chain | O(k) walk + O(1) cut | O(removals × avg k) - gentle when k stays small |
+| Fenwick tally tree | O(log N) find + O(log N) update | O(removals × log N) - steady even when k grows |
 
 Same survivors. Different price. The naive rite is correct until the host grows vast enough to notice.
 
@@ -65,7 +65,7 @@ Same survivors. Different price. The naive rite is correct until the host grows 
 |------|--------|
 | **Operation** | Sever the k-th *remaining* survivor from a live collection |
 | **Naive rite** | `result.splice(k - 1, 1)` on a JavaScript array |
-| **Per-severance cost** | O(N) — every trailing element shifts left |
+| **Per-severance cost** | O(N) - every trailing element shifts left |
 | **At scale** | Removals × average host length → quadratic or worse in practice |
 | **What we actually need** | Locate the k-th survivor and banish it **without moving the rest** |
 
@@ -73,9 +73,9 @@ Two structures answer that summons. Same goal. Different temperament.
 
 ---
 
-## Recommended way of making us whole — the chain of survivors
+## Recommended way of making us whole - the chain of survivors
 
-**Idea:** Store the bound values as nodes in a doubly-linked chain. Each node remembers its neighbors. Severing a node is repointing two pointers — no array shifting, no tail dragged through the void.
+**Idea:** Store the bound values as nodes in a doubly-linked chain. Each node remembers its neighbors. Severing a node is repointing two pointers - no array shifting, no tail dragged through the void.
 
 ```
 Initial host:    [-3] ←→ [-1] ←→ [-4]
@@ -89,7 +89,7 @@ After:           [-3] ←→ [-4]
 Position:          1      2
 ```
 
-**Unlinking** (O(1) — two pointers rewired):
+**Unlinking** (O(1) - two pointers rewired):
 
 ```
 Before:   ... ←→ [A] ←→ [B] ←→ [C] ←→ ...
@@ -107,9 +107,9 @@ Sever B:  ... ←→ [A] ←→ [C] ←→ ...
 
 ---
 
-## Recommended way of making us whole — the tally tree
+## Recommended way of making us whole - the tally tree
 
-**Idea:** Keep values in fixed slots that never move. A Binary Indexed Tree (Fenwick tree) tracks **how many survivors** live in each prefix. Data stays put — only alive flags and counts change.
+**Idea:** Keep values in fixed slots that never move. A Binary Indexed Tree (Fenwick tree) tracks **how many survivors** live in each prefix. Data stays put - only alive flags and counts change.
 
 ```
 Original slots:  [0]  [1]  [2]  [3]  [4]   ← fixed indices, eternal
@@ -121,7 +121,7 @@ Prefix counts (survivors up to index i):
   alive:     1  2  3  3  4
 ```
 
-**Find 2nd alive:** binary search on the tree — "where does the prefix count first reach 2?"
+**Find 2nd alive:** binary search on the tree - "where does the prefix count first reach 2?"
 
 ```
 Want k=2 (2nd survivor):
@@ -162,7 +162,7 @@ Both paths refuse the `splice` trap. Neither drags trailing elements on severanc
 
 | | Chain of Survivors | Tally Tree |
 |---|-------------------|------------|
-| **Mental model** | Beads on a cord — follow links to the k-th, then snip | Fixed slots + a counter tree — leap to the k-th alive index |
+| **Mental model** | Beads on a cord - follow links to the k-th, then snip | Fixed slots + a counter tree - leap to the k-th alive index |
 | **Data movement** | None (repoint pointers) | None (flip flags, update counts) |
 | **Find k-th alive** | Walk k links from head | Binary search on prefix sums |
 | **Sever** | Rewire prev/next | Mark banished + decrement tree |
@@ -197,11 +197,11 @@ TALLY TREE:   flip a flag + update counts → no copy
 
 ## Worked traces
 
-### Example 1 — a small host
+### Example 1 - a small host
 
 **Input:** `[-10, 2, -20, 1, -30]`
 
-**Phase 1 — gather the bound:**
+**Phase 1 - gather the bound:**
 
 ```
 Result: [-10, -20, -30]
@@ -243,11 +243,11 @@ alive:  ✓      ✓      ✓     aliveCount = 3
 
 **Final survivors:** `[-30]`
 
-### Example 2 — severance sigils out of reach
+### Example 2 - severance sigils out of reach
 
 **Input:** `[-3, 5, -1, 2, -4, 1, -7]`
 
-**Phase 1 — gather the bound:**
+**Phase 1 - gather the bound:**
 
 ```
 Result: [-3, -1, -4, -7]
@@ -267,7 +267,7 @@ head → [0:-3] → [1:-1] → [2:-4] → [3:-7]
 
 | Step | Sigil | Action | Chain after |
 |------|-------|--------|-------------|
-| 1 | `5` | Skip — position ≥ length (4) | unchanged |
+| 1 | `5` | Skip - position ≥ length (4) | unchanged |
 | 2 | `2` | Walk 2 links: `0→1`, unlink slot 1 (`-1`) | `[0:-3] → [2:-4] → [3:-7]` |
 | 3 | `1` | Walk 1 link: slot 0, unlink (`-3`) | `[2:-4] → [3:-7]` |
 
@@ -283,7 +283,7 @@ alive:  ✓     ✓     ✓     ✓     aliveCount = 4
 
 | Step | Sigil | Action | Alive after |
 |------|-------|--------|-------------|
-| 1 | `5` | Skip — position ≥ alive count (4) | unchanged |
+| 1 | `5` | Skip - position ≥ alive count (4) | unchanged |
 | 2 | `2` | `findKth(2)` → slot 1 (`-1`), mark banished | slots 0, 2, 3 → `[-3, -4, -7]` |
 | 3 | `1` | `findKth(1)` → slot 0 (`-3`), mark banished | slots 2, 3 → `[-4, -7]` |
 
@@ -299,16 +299,16 @@ alive:  ✓     ✓     ✓     ✓     aliveCount = 4
 | Chain of survivors | O(k) walk from head | O(1) pointer rewire | Small average k; simpler inscription |
 | Tally tree | O(log N) prefix search | O(log N) count update | Large k; predictable bounds as N grows |
 
-The chain is the readable default — the first rite I inscribe when k tends to stay modest. The tally tree is the one I reach for when severance sigils can land anywhere in a host that refuses to shrink — same survivors, but the toll stays logarithmic instead of linear in N.
+The chain is the readable default - the first rite I inscribe when k tends to stay modest. The tally tree is the one I reach for when severance sigils can land anywhere in a host that refuses to shrink - same survivors, but the toll stays logarithmic instead of linear in N.
 
 ## Beware of the unseen
 
 - **1-indexed k.** The spec counts survivors from 1, not 0. Off-by-one here silently corrupts the host.
-- **Out-of-bounds sigils.** If k exceeds the current survivor count, skip — do not wrap or clamp.
+- **Out-of-bounds sigils.** If k exceeds the current survivor count, skip - do not wrap or clamp.
 - **Phase order matters.** Gather all negatives first, then apply positives in input order. Reversing the phases changes the answer entirely.
 - **Tally tree overhead.** Inscribing and maintaining the tree class costs more lines than a chain. Only worth the effort when k or N forces your hand.
 
 ## Grimoires and scrolls used in esoteric research
 
-- Peter Fenwick, *A New Data Structure for Cumulative Frequency Tables* (1994) — the tally tree / Binary Indexed Tree for O(log N) prefix queries and point updates.
-- Doubly-linked list — the chain of survivors; pointer rewire as O(1) severance without array shifting.
+- Peter Fenwick, *A New Data Structure for Cumulative Frequency Tables* (1994) - the tally tree / Binary Indexed Tree for O(log N) prefix queries and point updates.
+- Doubly-linked list - the chain of survivors; pointer rewire as O(1) severance without array shifting.

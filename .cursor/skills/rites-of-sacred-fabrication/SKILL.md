@@ -11,14 +11,14 @@ Use this skill when the user says "fabricate project", "sync PRD to Linear", "cr
 
 ## Workflow
 
-1. **Locate artifacts** — read `context/foundation/prd.md` and `context/foundation/roadmap.md` fully (no `limit`/`offset`). If either is missing, report which and stop unless the user supplies an alternate path.
-2. **Discover providers** — scan enabled MCP servers for project-management tools (`list_projects`, `save_project`, `list_milestones`, `save_milestone`, or equivalent). If the user names a provider, use it when available. If none qualifies, say so and stop. Read tool schemas before any MCP call.
-3. **Discover repository MCP (best effort)** — scan for PR/repository tools (`list_pull_requests`, `create_pull_request_comment`, or equivalent). Optional; needed only for Step 7 PR audit propagation.
-4. **Parse & map** — extract PRD entries and roadmap streams per [mapping-rules.md](references/mapping-rules.md). Resolve whether this is **create** or **update** (see Mode detection below).
-5. **Present overview** — emit the overview block exactly. End with the one-line approval ask. **Do not call tools in this turn.** Wait for user reply.
-6. **Execute approved plan** — create or update project, milestones, and project description. Apply only what the overview promised.
-7. **Audit propagation (update mode only)** — post Liturgy audit comments on the project (and each affected milestone when the provider supports it). If repository MCP is available, find PRs linked to in-scope issues and post the same audit comment on each qualifying PR.
-8. **Emit summary** — report what was planned, approved, created/updated, and any failures.
+1. **Locate artifacts** - read `context/foundation/prd.md` and `context/foundation/roadmap.md` fully (no `limit`/`offset`). If either is missing, report which and stop unless the user supplies an alternate path.
+2. **Discover providers** - scan enabled MCP servers for project-management tools (`list_projects`, `save_project`, `list_milestones`, `save_milestone`, or equivalent). If the user names a provider, use it when available. If none qualifies, say so and stop. Read tool schemas before any MCP call.
+3. **Discover repository MCP (best effort)** - scan for PR/repository tools (`list_pull_requests`, `create_pull_request_comment`, or equivalent). Optional; needed only for Step 7 PR audit propagation.
+4. **Parse & map** - extract PRD entries and roadmap streams per [mapping-rules.md](references/mapping-rules.md). Resolve whether this is **create** or **update** (see Mode detection below).
+5. **Present overview** - emit the overview block exactly. End with the one-line approval ask. **Do not call tools in this turn.** Wait for user reply.
+6. **Execute approved plan** - create or update project, milestones, and project description. Apply only what the overview promised.
+7. **Audit propagation (update mode only)** - post Liturgy audit comments on the project (and each affected milestone when the provider supports it). If repository MCP is available, find PRs linked to in-scope issues and post the same audit comment on each qualifying PR.
+8. **Emit summary** - report what was planned, approved, created/updated, and any failures.
 
 ## Mode Detection
 
@@ -29,30 +29,30 @@ Use this skill when the user says "fabricate project", "sync PRD to Linear", "cr
 
 On update, diff artifacts against the last known state:
 
-1. Prefer a `<!-- sacred-fabrication:sync -->` marker block at the bottom of the project description (see mapping rules) — parse stored PRD version, roadmap hash, and milestone map.
+1. Prefer a `<!-- sacred-fabrication:sync -->` marker block at the bottom of the project description (see mapping rules) - parse stored PRD version, roadmap hash, and milestone map.
 2. If no marker exists, diff against current project description and milestone names vs parsed artifacts.
 
 Record every detected change for the audit comment and overview.
 
 ## Approval Gate
 
-After Step 5 overview, wait for chat reply. **Never use `AskQuestion`** — overview must stay visible.
+After Step 5 overview, wait for chat reply. **Never use `AskQuestion`** - overview must stay visible.
 
 ```
 Approve **<create | update>** for project "<name>"? Reply: `approve` · `skip` · or describe edits.
 ```
 
-- Default is **no writes** — silence or ambiguity means skip.
+- Default is **no writes** - silence or ambiguity means skip.
 - Never execute in the same turn as the overview.
 
 ## Output Format
 
-In emitted output, **all characters between `[` and `]` must be UPPERCASE** — section headers, labels, and any dynamic bracket text (e.g. `[PTERODACTOR3000]` in audit comments).
+In emitted output, **all characters between `[` and `]` must be UPPERCASE** - section headers, labels, and any dynamic bracket text (e.g. `[PTERODACTOR3000]` in audit comments).
 
-### Overview (before approval — required)
+### Overview (before approval - required)
 
 ```
-// [SACRED FABRICATION — OVERVIEW] //
+// [SACRED FABRICATION - OVERVIEW] //
 Mode: <create | update> · Provider: <name> · Project: <PRD project name>
 PRD: v<version> · Roadmap: <slice count> slices · <stream count> streams
 
@@ -62,16 +62,16 @@ Summary: <one line from Vision & Problem Statement>
 Description sections: <comma-separated section names to write, e.g. Vision, Success Criteria, User Stories, FR index>
 
 // [MILESTONES] //
-<Stream letter or ordinal> — <Theme> — Chain: <F-01 → S-01 → …>
+<Stream letter or ordinal> - <Theme> - Chain: <F-01 → S-01 → …>
   Scope: <one line from stream Note or derived from slice outcomes>
-… one block per stream; or `None — roadmap has no Streams section.`
+… one block per stream; or `None - roadmap has no Streams section.`
 
-// [CHANGES — UPDATE MODE ONLY] //
-<field or milestone> — <what changed> — <why, from PRD/roadmap diff>
-… or `None — already in sync.`
+// [CHANGES - UPDATE MODE ONLY] //
+<field or milestone> - <what changed> - <why, from PRD/roadmap diff>
+… or `None - already in sync.`
 
-// [PR AUDIT — UPDATE MODE ONLY] //
-<PR #N> — linked issue <IDENTIFIER> — in scope: <yes | no> — <reason>
+// [PR AUDIT - UPDATE MODE ONLY] //
+<PR #N> - linked issue <IDENTIFIER> - in scope: <yes | no> - <reason>
 … or `No repository MCP.` · or `No linked PRs in scope.`
 
 Approve **<create | update>** for project "<name>"? Reply: `approve` · `skip` · or describe edits.
@@ -82,7 +82,7 @@ Overview rules:
 - Milestones come from `## Streams` in roadmap.md. If Streams is absent, derive one milestone per `F-NN`/`S-NN` in `## At a glance` (cap at 10; note truncation).
 - PRD refs in milestone scope use literal IDs (`FR-001`, `US-01`) from the roadmap slice rows in that stream's chain.
 - Update mode must list every material diff; do not collapse into "misc updates".
-- Do not invent streams, milestones, or PR links — only report parsed artifacts and MCP data.
+- Do not invent streams, milestones, or PR links - only report parsed artifacts and MCP data.
 
 ### Summary (after execution)
 
@@ -91,22 +91,22 @@ Overview rules:
 Provider: <name> · Mode: <create | update> · Executed: <YYYY-MM-DD>
 
 // [PROJECT] //
-<name> — <created | updated> — <provider identifier or URL if returned>
+<name> - <created | updated> - <provider identifier or URL if returned>
 
 // [MILESTONES] //
-<name> — <created | updated | unchanged>
+<name> - <created | updated | unchanged>
 … or `None.`
 
 // [AUDIT COMMENTS] //
-<target> — posted
+<target> - posted
 … or `None.`
 
 // [PR AUDIT COMMENTS] //
-<PR #N> — posted
+<PR #N> - posted
 … or `None.`
 
 // [SKIPPED / FAILED] //
-<item> — <reason>
+<item> - <reason>
 … or `None.`
 ```
 
@@ -121,9 +121,9 @@ On **update mode only**, post this exact format (Markdown body) to the project a
 
 | Field | Rule |
 | ----- | ---- |
-| `<who>` | Current user display name from MCP if available; else `agent` — **uppercase inside brackets** in emitted output |
+| `<who>` | Current user display name from MCP if available; else `agent` - **uppercase inside brackets** in emitted output |
 | `<when>` | `YYYY-MM-DD` (today) |
-| `<what changed; why>` | One or two sentences from the diff — concrete IDs (`FR-003`, `S-02`, stream B) and rationale from PRD/roadmap |
+| `<what changed; why>` | One or two sentences from the diff - concrete IDs (`FR-003`, `S-02`, stream B) and rationale from PRD/roadmap |
 
 Post the **same body** on project, affected milestones (when supported), and each in-scope PR. Do not paraphrase differently per target.
 

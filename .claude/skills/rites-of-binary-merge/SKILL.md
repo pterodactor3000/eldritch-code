@@ -11,14 +11,14 @@ Use this skill when the user says "open PR", "create pull request", "binary merg
 
 ## Workflow
 
-1. **Git baseline** — read branch, upstream tracking, commits ahead of base, and diff stat. Default base: `main`, then `master`, then remote default. Require at least one commit ahead; stop if working tree is dirty unless user explicitly includes uncommitted files (out of scope — commit first).
-2. **Discover repository MCP** — scan for PR tools (`create_pull_request`, `gh pr create`, or equivalent). Prefer `gh` when available. If none qualifies, stop after preview with manual PR instructions.
-3. **Discover task MCP** — scan for issue tools (`save_issue`, `save_comment`, `get_issue`, or equivalent). Optional for PR-only; required for issue updates and comments.
-4. **Resolve linked issues** — per [link-resolution.md](references/link-resolution.md): branch name, commit messages, `context/changes/`, issue title prefixes (`// [S-NN]::[change-id] //`). Fetch each candidate issue; drop false positives.
-5. **Draft PR** — title from conventional commits (see PR Title); body with summary, test plan, `Fixes <IDENTIFIER>` / `Closes` lines, and Matriculation signature (see PR Body Signature). Never append vendor "made with …" footers.
-6. **Preview** — emit overview (PR, issues, comments, branch push). End with approval ask. **No MCP or git push in this turn.**
-7. **Execute** — on `approve`: push branch if not on remote, create PR, update each linked issue (state → review-ready, branch/PR metadata when supported), post Synaptic Alignment comment on each involved issue.
-8. **Summary** — report PR URL, issues updated, comments posted, failures.
+1. **Git baseline** - read branch, upstream tracking, commits ahead of base, and diff stat. Default base: `main`, then `master`, then remote default. Require at least one commit ahead; stop if working tree is dirty unless user explicitly includes uncommitted files (out of scope - commit first).
+2. **Discover repository MCP** - scan for PR tools (`create_pull_request`, `gh pr create`, or equivalent). Prefer `gh` when available. If none qualifies, stop after preview with manual PR instructions.
+3. **Discover task MCP** - scan for issue tools (`save_issue`, `save_comment`, `get_issue`, or equivalent). Optional for PR-only; required for issue updates and comments.
+4. **Resolve linked issues** - per [link-resolution.md](references/link-resolution.md): branch name, commit messages, `context/changes/`, issue title prefixes (`// [S-NN]::[change-id] //`). Fetch each candidate issue; drop false positives.
+5. **Draft PR** - title from conventional commits (see PR Title); body with summary, test plan, `Fixes <IDENTIFIER>` / `Closes` lines, and Matriculation signature (see PR Body Signature). Never append vendor "made with …" footers.
+6. **Preview** - emit overview (PR, issues, comments, branch push). End with approval ask. **No MCP or git push in this turn.**
+7. **Execute** - on `approve`: push branch if not on remote, create PR, update each linked issue (state → review-ready, branch/PR metadata when supported), post Synaptic Alignment comment on each involved issue.
+8. **Summary** - report PR URL, issues updated, comments posted, failures.
 
 ## PR Title
 
@@ -39,7 +39,7 @@ Append **exactly one** signature line as the **last line** of every PR body. Nev
 
 | Field | Rule |
 | ----- | ---- |
-| `<tool name>` | Host that executed this skill: `Cursor`, `Claude`, `Codex`, or the harness name if different — **uppercase inside brackets** in emitted output (e.g. `[CURSOR]`) |
+| `<tool name>` | Host that executed this skill: `Cursor`, `Claude`, `Codex`, or the harness name if different - **uppercase inside brackets** in emitted output (e.g. `[CURSOR]`) |
 
 If the PR create API or CLI injects a default signature, strip it before submit and replace with the Matriculation line above.
 
@@ -85,12 +85,12 @@ Approve **binary merge** for branch `<branch>` → `<base>`? Reply: `approve` ·
 
 ## Output Format
 
-In emitted output, **all characters between `[` and `]` must be UPPERCASE** — section headers, labels, and any dynamic bracket text. Markdown task checkboxes (`- [ ]`) are exempt.
+In emitted output, **all characters between `[` and `]` must be UPPERCASE** - section headers, labels, and any dynamic bracket text. Markdown task checkboxes (`- [ ]`) are exempt.
 
 ### Preview (before approval)
 
 ```
-// [BINARY MERGE — PREVIEW] //
+// [BINARY MERGE - PREVIEW] //
 Branch: <branch> → <base> · Commits: <N> · Provider: <repo MCP> · Tracker: <task MCP | none>
 
 // [PUSH] //
@@ -109,17 +109,17 @@ Test plan:
 // [AUTOMATED] :: MATRICULATION ENGINE :: [TOOL NAME] //
 
 // [LINKED ISSUES] //
-<IDENTIFIER> — <title> — source: <branch | commit | context | title prefix>
-… or `None detected — PR will not auto-close issues.`
+<IDENTIFIER> - <title> - source: <branch | commit | context | title prefix>
+… or `None detected - PR will not auto-close issues.`
 
 // [ISSUE UPDATES] //
-<IDENTIFIER> — state: <current> → <review-ready> · branch: <name if set>
-… or `None — no task MCP.`
+<IDENTIFIER> - state: <current> → <review-ready> · branch: <name if set>
+… or `None - no task MCP.`
 
 // [SYNAPTIC ALIGNMENT COMMENTS] //
 <IDENTIFIER>:
 // <who> :: Synaptic Alignment :: <when> //
-<https://…/pull/N — one sentence brief (draft)>
+<https://…/pull/N - one sentence brief (draft)>
 
 Approve **binary merge** for branch `<branch>` → `<base>`? Reply: `approve` · `skip` · or describe edits.
 ```
@@ -128,7 +128,7 @@ Preview rules:
 
 - Draft PR link as placeholder URL only if repo slug is known; otherwise `(<PR URL after create>)` in comment draft.
 - List every linked issue; cap at 20 with `… and N more.`
-- Do not invent issue links — only report resolved identifiers.
+- Do not invent issue links - only report resolved identifiers.
 
 ### Summary (after execution)
 
@@ -137,15 +137,15 @@ Preview rules:
 Branch: <branch> · Base: <base> · Executed: <YYYY-MM-DD>
 
 // [PULL REQUEST] //
-<URL> — <title>
-… or `Failed — <reason>`
+<URL> - <title>
+… or `Failed - <reason>`
 
 // [ISSUES UPDATED] //
-<IDENTIFIER> — <state change or metadata> — comment posted
+<IDENTIFIER> - <state change or metadata> - comment posted
 … or `None.`
 
 // [SKIPPED / FAILED] //
-<item> — <reason>
+<item> - <reason>
 … or `None.`
 ```
 

@@ -67,16 +67,16 @@ Structure the review with these headers exactly:
 
 ```
 // [Critical] //
-<file:line> — <finding>
+<file:line> - <finding>
 
 // [Warning] //
-<file:line> — <finding>
+<file:line> - <finding>
 
 // [Suggestion] //
-<file:line> — <finding>
+<file:line> - <finding>
 
 // [Verdict] //
-APPROVE | REQUEST CHANGES | NEEDS DISCUSSION — <one-line rationale>
+APPROVE | REQUEST CHANGES | NEEDS DISCUSSION - <one-line rationale>
 ```
 
 Rules for output:
@@ -89,6 +89,6 @@ Rules for output:
 
 ### Verdict guidance
 
-- **APPROVE** — no Critical or Warning findings; Suggestions are optional polish.
-- **REQUEST CHANGES** — any Critical finding, or Warning findings that affect correctness, security, or maintainability.
-- **NEEDS DISCUSSION** — trade-offs, ambiguous requirements, or convention conflicts that need a human decision before merge.
+- **APPROVE** - no Critical or Warning findings; Suggestions are optional polish.
+- **REQUEST CHANGES** - any Critical finding, or Warning findings that affect correctness, security, or maintainability.
+- **NEEDS DISCUSSION** - trade-offs, ambiguous requirements, or convention conflicts that need a human decision before merge.

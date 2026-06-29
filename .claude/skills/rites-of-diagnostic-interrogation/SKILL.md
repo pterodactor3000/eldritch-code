@@ -63,22 +63,22 @@ Use this skill when the user says "review code", "check this PR", "review my cha
 
 ## Output Format
 
-In emitted output, **all characters between `[` and `]` must be UPPERCASE** — section headers, labels, and any dynamic bracket text.
+In emitted output, **all characters between `[` and `]` must be UPPERCASE** - section headers, labels, and any dynamic bracket text.
 
 Structure the review with these headers exactly:
 
 ```
 // [CRITICAL] //
-<file:line> — <finding>
+<file:line> - <finding>
 
 // [WARNING] //
-<file:line> — <finding>
+<file:line> - <finding>
 
 // [SUGGESTION] //
-<file:line> — <finding>
+<file:line> - <finding>
 
 // [VERDICT] //
-APPROVE | REQUEST CHANGES | NEEDS DISCUSSION — <one-line rationale>
+APPROVE | REQUEST CHANGES | NEEDS DISCUSSION - <one-line rationale>
 ```
 
 Rules for output:
@@ -91,6 +91,6 @@ Rules for output:
 
 ### Verdict guidance
 
-- **APPROVE** — no Critical or Warning findings; Suggestions are optional polish.
-- **REQUEST CHANGES** — any Critical finding, or Warning findings that affect correctness, security, or maintainability.
-- **NEEDS DISCUSSION** — trade-offs, ambiguous requirements, or convention conflicts that need a human decision before merge.
+- **APPROVE** - no Critical or Warning findings; Suggestions are optional polish.
+- **REQUEST CHANGES** - any Critical finding, or Warning findings that affect correctness, security, or maintainability.
+- **NEEDS DISCUSSION** - trade-offs, ambiguous requirements, or convention conflicts that need a human decision before merge.

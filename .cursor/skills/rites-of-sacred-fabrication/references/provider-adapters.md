@@ -1,6 +1,6 @@
-# Provider Adapters — Sacred Fabrication
+# Provider Adapters - Sacred Fabrication
 
-Map each MCP provider to the common project shape before create/update. Read tool schemas first — names below are typical, not guaranteed.
+Map each MCP provider to the common project shape before create/update. Read tool schemas first - names below are typical, not guaranteed.
 
 ## Discovery signals
 
@@ -20,21 +20,21 @@ A server is a **repository provider** when its tools can:
 
 Known providers: GitHub (`gh` MCP or GitHub MCP), GitLab. Skip PR propagation when none is available.
 
-## Field mapping — project
+## Field mapping - project
 
 | Concept | Linear | Jira | GitHub Projects |
 | ------- | ------ | ---- | --------------- |
 | List projects | `list_projects` | project search / `getProject` | org/user project list |
 | Create/update | `save_project` | create/update project API | create/update project |
 | Name | `name` | `name` | `title` |
-| Summary | `summary` | — | `short_description` |
+| Summary | `summary` | - | `short_description` |
 | Description | `description` (markdown) | `description` | project body / README field |
 | Labels | `labels` | labels/components | labels |
-| Target date | `targetDate` | release date / custom field | — |
+| Target date | `targetDate` | release date / custom field | - |
 | Team scope | `addTeams` / `setTeams` | project lead / category | org repo scope |
 | Match existing | `list_projects` filter by name | JQL / search by name | list by title |
 
-## Field mapping — milestones
+## Field mapping - milestones
 
 | Concept | Linear | Jira | GitHub Projects |
 | ------- | ------ | ---- | --------------- |
@@ -43,34 +43,34 @@ Known providers: GitHub (`gh` MCP or GitHub MCP), GitLab. Skip PR propagation wh
 | Name | `name` | `name` | `title` |
 | Description | `description` | description | body |
 | Target date | `targetDate` | release date | due_on |
-| Comment on milestone | `save_comment` · `milestoneId` | comment on version | — |
+| Comment on milestone | `save_comment` · `milestoneId` | comment on version | - |
 
-## Field mapping — audit comments
+## Field mapping - audit comments
 
 | Target | Linear | Jira | GitHub |
 | ------ | ------ | ---- | ------ |
-| Project | `save_comment` · `projectId` | project comment (if supported) or description append | issue/discussion — prefer project-level when available |
-| Milestone | `save_comment` · `milestoneId` | version comment | — |
-| Pull request | — | — | `create_pull_request_comment` / review comment API |
+| Project | `save_comment` · `projectId` | project comment (if supported) or description append | issue/discussion - prefer project-level when available |
+| Milestone | `save_comment` · `milestoneId` | version comment | - |
+| Pull request | - | - | `create_pull_request_comment` / review comment API |
 
-Resolve milestone UUIDs via `list_milestones` before commenting — names alone are not accepted on all providers.
+Resolve milestone UUIDs via `list_milestones` before commenting - names alone are not accepted on all providers.
 
-## Fetch patterns — create flow
+## Fetch patterns - create flow
 
-1. **Teams / org context** — one call when provider requires team for project creation.
-2. **Existing project check** — list/search by PRD `project` name before create.
-3. **Create project** — name, summary, description (assembled template + empty sync marker).
-4. **Create milestones** — one call per stream; set description from chain + slice scope.
-5. **Finalize sync marker** — update project description with populated marker (milestone IDs filled in).
+1. **Teams / org context** - one call when provider requires team for project creation.
+2. **Existing project check** - list/search by PRD `project` name before create.
+3. **Create project** - name, summary, description (assembled template + empty sync marker).
+4. **Create milestones** - one call per stream; set description from chain + slice scope.
+5. **Finalize sync marker** - update project description with populated marker (milestone IDs filled in).
 
-## Fetch patterns — update flow
+## Fetch patterns - update flow
 
-1. **Get project** — fetch current description and milestone list.
-2. **Parse sync marker** — extract baseline; diff against fresh parse.
-3. **Update project description** — merge changed PRD sections; refresh Streams table; bump sync marker.
-4. **Upsert milestones** — update by name match; create new streams; do not delete milestones unless user approved deletion in overview.
-5. **Post audit comments** — project first, then each changed milestone.
-6. **PR propagation** — see below.
+1. **Get project** - fetch current description and milestone list.
+2. **Parse sync marker** - extract baseline; diff against fresh parse.
+3. **Update project description** - merge changed PRD sections; refresh Streams table; bump sync marker.
+4. **Upsert milestones** - update by name match; create new streams; do not delete milestones unless user approved deletion in overview.
+5. **Post audit comments** - project first, then each changed milestone.
+6. **PR propagation** - see below.
 
 ## PR linking patterns
 
@@ -109,5 +109,5 @@ Empty values stay empty. Never invent project IDs, milestone IDs, or PR links.
 ## Write safety
 
 - Merge labels; do not replace entire label set if API replaces rather than merges.
-- Append sync marker; do not duplicate markers — replace the existing `<!-- sacred-fabrication:sync … -->` block in place.
+- Append sync marker; do not duplicate markers - replace the existing `<!-- sacred-fabrication:sync … -->` block in place.
 - Idempotent re-run: matching name + unchanged marker → overview shows "already in sync"; skip writes unless user approves refresh.

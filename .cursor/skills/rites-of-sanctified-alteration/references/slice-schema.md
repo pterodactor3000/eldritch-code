@@ -1,4 +1,4 @@
-# Slice Schema — Sanctified Alteration
+# Slice Schema - Sanctified Alteration
 
 Roadmap slice contract aligned with `/10x-roadmap` output. New slices must match existing slices in the live `roadmap.md` byte-for-byte in structure.
 
@@ -10,12 +10,12 @@ Roadmap slice contract aligned with `/10x-roadmap` output. New slices must match
 - **Outcome:** <user can …>
 - **Change ID:** <kebab-case-change-id>
 - **PRD refs:** <FR-NNN, US-NN, …>
-- **Prerequisites:** <S-NN, F-NN, external state, or —>
-- **Parallel with:** <IDs or —>
-- **Blockers:** <external pending or —>
+- **Prerequisites:** <S-NN, F-NN, external state, or ->
+- **Parallel with:** <IDs or ->
+- **Blockers:** <external pending or ->
 - **Unknowns:**
-  - <question> — Owner: <user|team|TBD>. Block: <yes|no>.
-  - (or `—` if none)
+  - <question> - Owner: <user|team|TBD>. Block: <yes|no>.
+  - (or `-` if none)
 - **Risk:** <one line>
 - **Status:** proposed | ready | blocked
 ```
@@ -26,11 +26,11 @@ Roadmap slice contract aligned with `/10x-roadmap` output. New slices must match
 | ----- | ---- |
 | **Slice ID** | `S-NN` zero-padded; next = max existing + 1 |
 | **Title** | Noun phrase; not the outcome sentence |
-| **Outcome** | Verb-led: _"user can …"_ — never a noun phrase |
+| **Outcome** | Verb-led: _"user can …"_ - never a noun phrase |
 | **Change ID** | Kebab-case; unique in roadmap; suitable for `context/changes/<id>/`; not equal to `S-NN` |
 | **PRD refs** | Literal IDs from PRD; at least one `FR-\d{3}` or `US-\d{2}` |
 | **Prerequisites** | Existing IDs only; comma-separated; external state in plain English |
-| **Parallel with** | Derive from dep graph when possible; else `—` |
+| **Parallel with** | Derive from dep graph when possible; else `-` |
 | **Blockers** | External-only (vendor, design, stakeholder); resolvable team questions → Unknowns |
 | **Unknowns** | `Block: yes` forces `Status: blocked` |
 | **Status** | Default `proposed`; `ready` only when prerequisites met and no blocking unknowns |
@@ -40,7 +40,7 @@ Roadmap slice contract aligned with `/10x-roadmap` output. New slices must match
 Append to the table under `## At a glance` (or insert in dependency order if the table is sorted):
 
 ```markdown
-| S-NN | <change-id> | <outcome — user-facing, truncated if needed> | <prerequisites> | <PRD refs> | <status> |
+| S-NN | <change-id> | <outcome - user-facing, truncated if needed> | <prerequisites> | <PRD refs> | <status> |
 ```
 
 Foundation rows use `(foundation)` prefix in Outcome column; slice rows do not.
@@ -50,7 +50,7 @@ Foundation rows use `(foundation)` prefix in Outcome column; slice rows do not.
 Append under `## Backlog Handoff`:
 
 ```markdown
-| S-NN | <change-id> | <short issue title> | <yes if ready else no> | Run `/10x-plan <change-id>` or — |
+| S-NN | <change-id> | <short issue title> | <yes if ready else no> | Run `/10x-plan <change-id>` or - |
 ```
 
 `Suggested issue title` is the human short title **without** the `// [S-NN]::… //` prefix.

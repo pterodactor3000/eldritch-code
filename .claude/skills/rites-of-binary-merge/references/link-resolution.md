@@ -1,4 +1,4 @@
-# Link Resolution — Binary Merge
+# Link Resolution - Binary Merge
 
 Resolve which tracker issues are involved in the current branch. Read schemas before MCP fetches.
 
@@ -28,7 +28,7 @@ Extract issue identifiers from:
 
 - `Fixes #123`, `Fixes TEAM-123`, `Closes #123`
 - `Fixes ENG-123, ENG-124` (multiple)
-- Footer `Refs:` lines — informational only; do not treat as auto-close unless `Fixes`/`Closes`
+- Footer `Refs:` lines - informational only; do not treat as auto-close unless `Fixes`/`Closes`
 
 Do **not** link from bare `FR-NNN` or `US-NN` unless an issue title/description explicitly carries that ref and matches the change scope.
 
@@ -44,12 +44,12 @@ When `context/changes/<change-id>/change.md` exists:
 For each candidate:
 
 1. Fetch issue; confirm not done/canceled.
-2. Confirm relevance: branch/commit/change-id appears in title, description, or labels — or user named the issue explicitly.
+2. Confirm relevance: branch/commit/change-id appears in title, description, or labels - or user named the issue explicitly.
 3. Drop duplicates and cross-repo false positives (wrong team prefix).
 
 ## Involved issue set
 
-Final set = verified linked issues. Empty set is valid — PR still created; no `Fixes` lines unless user supplies IDs; no Synaptic comments unless user names issues to notify.
+Final set = verified linked issues. Empty set is valid - PR still created; no `Fixes` lines unless user supplies IDs; no Synaptic comments unless user names issues to notify.
 
 User override: `approve ENG-123, ENG-124` adds those IDs even if heuristics missed them.
 
@@ -71,4 +71,4 @@ Derive from:
 2. First commit subject, or
 3. Issue outcome line from linked issue description
 
-Example: `https://github.com/org/repo/pull/42 — Adds themed dashboard header strip.`
+Example: `https://github.com/org/repo/pull/42 - Adds themed dashboard header strip.`

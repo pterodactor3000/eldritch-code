@@ -1,6 +1,6 @@
-# Provider Adapters — Sanctified Alteration
+# Provider Adapters - Sanctified Alteration
 
-Issue creation after roadmap write. Read tool schemas before calling — names below are typical.
+Issue creation after roadmap write. Read tool schemas before calling - names below are typical.
 
 ## Discovery signals
 
@@ -23,7 +23,7 @@ Do not strip the prefix for any provider.
 ```markdown
 ## Outcome
 
-<slice Outcome field — one line>
+<slice Outcome field - one line>
 
 ## Acceptance Criteria
 
@@ -34,7 +34,7 @@ Do not strip the prefix for any provider.
 - **Slice:** S-NN
 - **Change ID:** <change-id>
 - **PRD refs:** <refs>
-- **Prerequisites:** <refs or —>
+- **Prerequisites:** <refs or ->
 - **Status:** <status>
 
 ## Plan
@@ -50,8 +50,8 @@ Run `/10x-plan <change-id>` when ready.
 | Description | `description` (markdown) | body | description |
 | Project | `project` | project (v2) | project key |
 | Milestone | `milestone` | milestone | fixVersion / sprint |
-| Team | `team` (required on create) | — | — |
-| State | `state` · default backlog/Todo | — | initial transition |
+| Team | `team` (required on create) | - | - |
+| State | `state` · default backlog/Todo | - | initial transition |
 | Labels | `labels` · optional `change-id` | labels | labels/components |
 
 ## Context inference
@@ -60,7 +60,7 @@ When user does not specify team/project/milestone:
 
 1. List recent issues or projects; match PRD `project` name from roadmap frontmatter.
 2. If sacred-fabrication sync marker exists on project description, use mapped milestone when slice PRD refs overlap a stream chain.
-3. If still ambiguous, include `— specify on approve` in preview and ask at Gate 2.
+3. If still ambiguous, include `- specify on approve` in preview and ask at Gate 2.
 
 ## Write pattern (Linear example)
 
@@ -74,7 +74,7 @@ save_issue:
   state: "Todo"
 ```
 
-Pass literal newlines in description — do not escape markdown.
+Pass literal newlines in description - do not escape markdown.
 
 ## Failure handling
 
@@ -91,4 +91,4 @@ Draft slice → Issue payload:
   labels: [change-id] when supported
 ```
 
-Never invent team IDs or project UUIDs — use names the provider resolves.
+Never invent team IDs or project UUIDs - use names the provider resolves.

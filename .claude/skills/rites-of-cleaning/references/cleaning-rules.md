@@ -1,6 +1,6 @@
 # Cleaning Rules
 
-Defaults for backlog cleaning after normalizing to the common shape. Read actual labels and statuses from MCP before applying — do not hardcode team-specific IDs.
+Defaults for backlog cleaning after normalizing to the common shape. Read actual labels and statuses from MCP before applying - do not hardcode team-specific IDs.
 
 ## Common issue shape
 
@@ -28,7 +28,7 @@ Flag as duplicate candidate when **any** of:
 - Provider exposes `duplicateOf` pointing to another open issue
 - Label (case-insensitive): `duplicate`
 - Another active issue has the same **normalized title** (trim, lowercase, collapse whitespace, strip `[...]` prefix)
-- Title similarity ≥ 0.9 after normalization (minor wording drift only — use judgment; list both in plan)
+- Title similarity ≥ 0.9 after normalization (minor wording drift only - use judgment; list both in plan)
 
 When multiple issues match, pick **one canonical** issue to keep:
 
@@ -85,7 +85,7 @@ Tag `stale` when:
 - `updatedAt` is **≥ 14 days** before today (calendar days, UTC)
 - Not already labeled `stale`
 
-Staleness is independent of assignee — stale assigned work gets flagged too.
+Staleness is independent of assignee - stale assigned work gets flagged too.
 
 ## Label bootstrap
 
@@ -104,4 +104,4 @@ Only create labels the user approved applying. Prefer team-scoped labels when th
 
 - Batch writes in groups of ≤ 10; report progress between batches on large plans.
 - On partial failure, continue remaining items and list failures under `[Skipped / failed]`.
-- Never delete issues — close or tag only.
+- Never delete issues - close or tag only.

@@ -1,15 +1,15 @@
-# Provider Adapters — Binary Merge
+# Provider Adapters - Binary Merge
 
-Read tool schemas before calling — names below are typical, not guaranteed.
+Read tool schemas before calling - names below are typical, not guaranteed.
 
 ## Discovery signals
 
-**Repository provider** — can create pull requests and read repo/branch metadata:
+**Repository provider** - can create pull requests and read repo/branch metadata:
 
 - GitHub: `gh` CLI, GitHub MCP, `create_pull_request`
 - GitLab: merge request create tools
 
-**Task provider** — can read/update issues and post comments:
+**Task provider** - can read/update issues and post comments:
 
 - Linear, Jira, GitHub Issues (same as rites-of-data-harvest)
 
@@ -59,7 +59,7 @@ Fixes <IDENTIFIER>
 
 ## Issue state → review-ready
 
-Map locally after `list_issue_statuses` / workflow fetch — do not hardcode team IDs.
+Map locally after `list_issue_statuses` / workflow fetch - do not hardcode team IDs.
 
 | Provider | Review-ready signal |
 | -------- | ------------------- |
@@ -97,7 +97,7 @@ Body (two lines, literal newlines):
 
 ```markdown
 // <who> :: Synaptic Alignment :: <YYYY-MM-DD> //
-<https://github.com/org/repo/pull/N — one sentence brief>
+<https://github.com/org/repo/pull/N - one sentence brief>
 ```
 
 Post once per involved issue after PR URL is known. Idempotent re-run: skip if an identical Synaptic comment exists on the issue (search recent comments for `Synaptic Alignment`).

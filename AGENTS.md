@@ -50,3 +50,7 @@ These conventions apply to all code in this repository. Adapt names, framework r
 - Specific assertions: `toEqual(expected)` instead of `toBeTruthy()`
 - Cover edge cases: empty, null, boundary values and error paths
 <!-- END @pterodactor3000/silica-animus -->
+
+## Writing
+
+- **Never use em dashes (`—`).** Use a single hyphen (`-`) instead. No exceptions.

@@ -1,4 +1,4 @@
-# Provider Adapters — Cleaning
+# Provider Adapters - Cleaning
 
 Discovery and normalization follow the same patterns as rites-of-data-harvest. This file covers **cleaning-specific** reads and writes.
 
@@ -17,16 +17,16 @@ Same as rites-of-data-harvest: server must list/search issues and return identif
 | Acceptance criteria | `description` markdown | issue body | description or custom field |
 | Staleness filter | `list_issues` · `updatedAt: "-P14D"` (for targeted fetch) | `updated:<'YYYY-MM-DD'` in search | JQL `updated <= -14d` |
 
-Read tool schemas first — parameter names above are typical, not guaranteed.
+Read tool schemas first - parameter names above are typical, not guaranteed.
 
 ## Fetch patterns
 
-1. **Statuses/labels** — one call to map done/canceled/duplicate states and list existing cleaning labels.
-2. **Active backlog** — list all active issues in scope; paginate until complete.
-3. **Duplicate detail** — for title-match candidates only, `get_issue` with relations when supported.
-4. **Description fetch** — if list response omits full description, batch `get_issue` for AC checks (cap at 50 per batch).
+1. **Statuses/labels** - one call to map done/canceled/duplicate states and list existing cleaning labels.
+2. **Active backlog** - list all active issues in scope; paginate until complete.
+3. **Duplicate detail** - for title-match candidates only, `get_issue` with relations when supported.
+4. **Description fetch** - if list response omits full description, batch `get_issue` for AC checks (cap at 50 per batch).
 
-Use date filters only to supplement a full scan — do not rely on `-P14D` alone or non-stale issues are missed.
+Use date filters only to supplement a full scan - do not rely on `-P14D` alone or non-stale issues are missed.
 
 ## Write patterns
 
