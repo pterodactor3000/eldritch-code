@@ -5,13 +5,13 @@ tags: [javascript, typescript, performance, fenwick-tree, linked-list]
 category: algorithms
 ---
 
-I needed to sever the **n-th remaining element** from a growing host - repeatedly, in order, without dragging the tail along on every cut. `splice` reads like the obvious rite on paper. At scale it becomes a slow ritual of copies, each one paid in full.
+The problem: I have a vast array of items - numbers, in fact. What is needed of me is to ritualistically perform **n-th remaining element** severance. Repeatedly. Using such methods like `splice` came to me initially, but the scale of the problem... I need something better.
 
 ## Known unknowns
 
-When the first implementation called `Array.prototype.splice`, I assumed the runtime would stay tractable. It didn't.
+As soon as `Array.prototype.splice` called for implementation, I thought it'd be enough. I was *so* wrong.
 
-The trap is not correctness. Every approach below yields the same survivors. The trap is **shifting**: each removal slides every element after the cut one slot left. Perform that rite hundreds of thousands of times on a host that stays large, and you summon work that never needed to touch most of the data at all.
+The trap is not being right or wrong. Every following approach gives me the same result, the same survivors. The trap is more sinister, it is **shifting**. Each removal moves every element on the right one slot left. Every. Single. One... Perform this thousands of times, because the host is enormous, and you'll be changing things you never needed to.
 
 ## Undeniable truths
 
@@ -23,30 +23,33 @@ Given an input array, process each element in order:
 | **n > 0** | Sever the **n-th remaining** survivor from `result` (1-indexed), if still in bounds |
 | **n = 0** | Pass in silence |
 
-Each severance rewrites what "2nd" or "3rd" means for the next invocation. That shifting semantics is the whole curse.
+Each ritual rewrites what "2nd" or "3rd" means for the next iteration. That shifting is the source of the problem.
 
+```mermaid
+flowchart TD
+    IN["Input: [-3, 5, -1, 2, -4]"]
+    IN --> P1["Phase 1: gather negatives<br/>[-3, -1, -4]  ·  positions 1, 2, 3"]
+    P1 --> P2["Phase 2: apply positives in order"]
+    P2 --> S5{"Sigil 5<br/>only 3 survivors"}
+    S5 -->|"skip"| S2["Sigil 2: sever 2nd survivor"]
+    S2 --> OUT["Result: [-3, -4]"]
 ```
-Input:  [-3,  5, -1,  2, -4]
-          │       │       │
-Phase 1: gather the bound (negatives)
-Result: [-3, -1, -4]     positions:  1   2   3
 
-Phase 2: apply the severance sigils (positives) in order
-  5 → only 3 survivors → skip
-  2 → sever 2nd → [-3, -4]
-```
-
-## Where rites go awry...
+## Where rites on array go awry...
 
 Naive `splice` on a dense array. Every severance copies the tail.
 
-```
-SPLICE on array:
-[-3, -1, -4, -7, -2]
-      ↑ sever index 1
-[-3, -4, -7, -2]     ← every element after index 1 DRAGGED left
-
-× many removals × large N = a quadratic toll in practice
+```mermaid
+flowchart TD
+    subgraph before["Before: sever index 1"]
+        direction LR
+        b0["0<br/>-3"] --> b1["1<br/>-1"] --> b2["2<br/>-4"] --> b3["3<br/>-7"] --> b4["4<br/>-2"]
+    end
+    before -->|"every element after index 1<br/>dragged left - O(N) copy"| after
+    subgraph after["After"]
+        direction LR
+        a0["0<br/>-3"] --> a1["1<br/>-4"] --> a2["2<br/>-7"] --> a3["3<br/>-2"]
+    end
 ```
 
 What the complexity oracle whispered - no fixture required, only the shape of the work:
@@ -69,31 +72,44 @@ Same survivors, different price. The naive rite is correct until the host grows 
 | **At scale** | Removals × average host length → quadratic or worse in practice |
 | **What we actually need** | Locate the k-th survivor and banish it **without moving the rest** |
 
-Two structures answer that summons. Same goal, different temperament.
+Two ritual structures answer that summons. Same goal, different temperament.
 
-## Ritual of completion - the Chain of Survivors
+## Ritual of Completion - the Chain of Survivors
 
 **Idea:** Store the bound values as nodes in a doubly-linked chain. Each node remembers its neighbors. Severing a node is repointing two pointers - no array shifting, no tail dragged through the void.
 
-```
-Initial host:    [-3] ←→ [-1] ←→ [-4]
-                 head            tail
-Position:          1       2       3
-
-Severance n=2: walk 2 links from head → reach [-1] → unlink
-
-After:           [-3] ←→ [-4]
-                 head    tail
-Position:          1       2
+```mermaid
+flowchart LR
+    subgraph initial["Initial host"]
+        head1(["head"]) --> A1["-3<br/>pos 1"]
+        A1 -->|next| B1["-1<br/>pos 2"]
+        B1 -->|prev| A1
+        B1 -->|next| C1["-4<br/>pos 3"]
+        C1 -->|prev| B1
+        C1 --> tail1(["tail"])
+    end
+    subgraph after["After n=2: -1 unlinked"]
+        head2(["head"]) --> A2["-3<br/>pos 1"]
+        A2 -->|next| C2["-4<br/>pos 2"]
+        C2 -->|prev| A2
+        C2 --> tail2(["tail"])
+    end
 ```
 
 **Unlinking** (O(1) - two pointers rewired):
 
-```
-Before:   ... ←→ [A] ←→ [B] ←→ [C] ←→ ...
-Sever B:  ... ←→ [A] ←→ [C] ←→ ...
-              A.next = C
-              C.prev = A
+```mermaid
+flowchart LR
+    subgraph before["Before: sever B"]
+        xA["A"] -->|next| xB["B"]
+        xB -->|prev| xA
+        xB -->|next| xC["C"]
+        xC -->|prev| xB
+    end
+    subgraph after["After: A.next=C, C.prev=A"]
+        yA["A"] -->|next| yC["C"]
+        yC -->|prev| yA
+    end
 ```
 
 | Step | Action | Cost |
@@ -103,7 +119,7 @@ Sever B:  ... ←→ [A] ←→ [C] ←→ ...
 
 **Good when:** k stays small on average. Easier to inscribe and to read.
 
-## Another ritual of reconstruction - the Tally Tree
+## Ritual of Reconstruction - the Tally Tree
 
 **Idea:** Keep values in fixed slots that never move. A Binary Indexed Tree (Fenwick tree) tracks **how many survivors** live in each prefix. Data stays put - only alive flags and counts change.
 
@@ -133,13 +149,15 @@ Want k=2 (2nd survivor):
 
 **Tree structure (conceptual):** each index `i` contributes its count to tree cells at `i, i+2, i+4, ...` (the `i & -i` pattern):
 
-```
-Array indices:  1   2   3   4   5   6   7   8
-                 │   │   │   │   │   │   │   │
-Tree covers:     └─1─┘   └─3─┘   └─5─┘   └─7─┘
-                     └─2─┘           └─6─┘
-                         └────4────┘       └─8─┘
-                             └────────8────────┘
+```mermaid
+graph BT
+    n1["cell 1<br/>index 1"] -->|"i += lowbit"| n2["cell 2<br/>indices 1-2"]
+    n3["cell 3<br/>index 3"] --> n4["cell 4<br/>indices 1-4"]
+    n2 --> n4
+    n5["cell 5<br/>index 5"] --> n6["cell 6<br/>indices 5-6"]
+    n7["cell 7<br/>index 7"] --> n8["cell 8<br/>indices 1-8"]
+    n4 --> n8
+    n6 --> n8
 ```
 
 | Operation | What it does | Cost |
@@ -206,9 +224,13 @@ Result: [-10, -20, -30]
 
 Initial cord (fixed slots, pointer links):
 
-```
-head → [0:-10] → [1:-20] → [2:-30]
-        pos 1     pos 2     pos 3
+```mermaid
+flowchart LR
+    head(["head"]) --> n0["slot 0<br/>-10<br/>pos 1"]
+    n0 -->|next| n1["slot 1<br/>-20<br/>pos 2"]
+    n1 -->|prev| n0
+    n1 -->|next| n2["slot 2<br/>-30<br/>pos 3"]
+    n2 -->|prev| n1
 ```
 
 | Step | Sigil | Action | Chain after |
@@ -252,9 +274,15 @@ Result: [-3, -1, -4, -7]
 
 Initial cord:
 
-```
-head → [0:-3] → [1:-1] → [2:-4] → [3:-7]
-        pos 1    pos 2    pos 3    pos 4
+```mermaid
+flowchart LR
+    head(["head"]) --> n0["slot 0<br/>-3<br/>pos 1"]
+    n0 -->|next| n1["slot 1<br/>-1<br/>pos 2"]
+    n1 -->|prev| n0
+    n1 -->|next| n2["slot 2<br/>-4<br/>pos 3"]
+    n2 -->|prev| n1
+    n2 -->|next| n3["slot 3<br/>-7<br/>pos 4"]
+    n3 -->|prev| n2
 ```
 
 | Step | Sigil | Action | Chain after |
@@ -291,7 +319,7 @@ alive: ✓     ✓     ✓     ✓     aliveCount = 4
 | Chain of survivors | O(k) walk from head | O(1) pointer rewire | Small average k; simpler inscription |
 | Tally tree | O(log N) prefix search | O(log N) count update | Large k; predictable bounds as N grows |
 
-The chain is the readable default - the first rite I inscribe when k tends to stay modest. The tally tree is the one I reach for when severance sigils can land anywhere in a host that refuses to shrink - same survivors, but the toll stays logarithmic instead of linear in N.
+The chain is the readable default - the first rite I inscribe when k tends to stay modest. The tally tree is the one I reach for when severance sigils can land anywhere in a host that refuses to shrink - same survivors, but the cost stays logarithmic instead of linear in N.
 
 ## Beware of the unseen
 

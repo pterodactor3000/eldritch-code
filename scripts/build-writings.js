@@ -23,7 +23,7 @@ const SANITIZE_OPTIONS = {
     'pre', 'code', 'em', 'strong', 'del', 'sup', 'sub',
     'a', 'img', 'hr',
     'table', 'thead', 'tbody', 'tr', 'th', 'td',
-    'span',
+    'span', 'div',
   ],
   allowedAttributes: {
     a: ['href', 'title'],
@@ -31,8 +31,12 @@ const SANITIZE_OPTIONS = {
     code: ['class'],
     pre: ['class'],
     span: ['class'],
+    div: ['class'],
     th: ['colspan', 'rowspan', 'align'],
     td: ['colspan', 'rowspan', 'align'],
+  },
+  allowedClasses: {
+    div: ['mermaid'],
   },
   allowedSchemes: ['http', 'https', 'mailto'],
   allowProtocolRelative: false,
@@ -116,6 +120,21 @@ const md = new MarkdownIt({
     return `<pre class="hljs"><code>${escapeHtml(str)}</code></pre>`;
   },
 });
+
+// Custom fence renderer: emit mermaid blocks as bare divs, bypassing the
+// pre/code wrapper markdown-it would otherwise add.
+const defaultFenceRenderer = md.renderer.rules.fence;
+md.renderer.rules.fence = function renderFence(tokens, idx, options, env, renderer) {
+  const token = tokens[idx];
+  const lang = (token.info || '').trim().split(/\s+/g)[0];
+  if (lang === 'mermaid') {
+    return `<div class="mermaid">${escapeHtml(token.content)}</div>\n`;
+  }
+  if (defaultFenceRenderer) {
+    return defaultFenceRenderer(tokens, idx, options, env, renderer);
+  }
+  return renderer.renderToken(tokens, idx, options);
+};
 
 function renderMarkdown(content) {
   const raw = md.render(content);

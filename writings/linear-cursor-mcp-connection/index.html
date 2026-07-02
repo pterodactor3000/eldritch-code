@@ -227,5 +227,48 @@ Connect failed after auth_required; returning needsAuth
     </footer>
 
     <script src="/script.js"></script>
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'base',
+        themeVariables: {
+          fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+          fontSize: '12px',
+
+          background: '#0a0a0a',
+
+          primaryColor: '#1a3a2e',
+          primaryBorderColor: '#3d7f6f',
+          primaryTextColor: '#d4d4d4',
+
+          secondaryColor: '#1a1a1a',
+          secondaryBorderColor: '#2d5f4f',
+          secondaryTextColor: '#d4d4d4',
+
+          tertiaryColor: '#0a0a0a',
+          tertiaryBorderColor: '#1a3a2e',
+          tertiaryTextColor: '#d4d4d4',
+
+          mainBkg: '#1a3a2e',
+          nodeBorder: '#3d7f6f',
+
+          lineColor: '#3d7f6f',
+          textColor: '#d4d4d4',
+
+          clusterBkg: '#1a1a1a',
+          clusterBorder: '#1a3a2e',
+          titleColor: '#b8a369',
+
+          edgeLabelBackground: '#1a1a1a',
+          labelBackground: '#1a1a1a',
+          labelTextColor: '#d4d4d4',
+
+          noteBkgColor: '#1a3a2e',
+          noteTextColor: '#d4d4d4',
+          noteBorderColor: '#3d7f6f',
+        },
+      });
+    </script>
   </body>
 </html>

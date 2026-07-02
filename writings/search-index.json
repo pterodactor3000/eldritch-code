@@ -2,7 +2,7 @@
   {
     "slug": "best-large-array-filter",
     "title": "The rituals of the n-th survivor",
-    "excerpt": "I needed to sever the **n-th remaining element** from a growing host - repeatedly, in order, without dragging the tail along on every cut. `splice` reads like the obvious rite on paper. At scale it be",
+    "excerpt": "The problem: I have a vast array of items - numbers, in fact. What is needed of me is to ritualistically perform **n-th remaining element** severance. Repeatedly. Using such methods like `splice` came",
     "tags": [
       "javascript",
       "typescript",
