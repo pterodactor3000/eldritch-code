@@ -224,6 +224,25 @@ nav a:hover::before {
   width: 100%;
 }
 
+.scroll-progress {
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--eldritch-glow), var(--cosmic-fog));
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: scroll-progress-fill linear;
+  animation-timeline: scroll(root block);
+}
+
+@keyframes scroll-progress-fill {
+  to {
+    transform: scaleX(1);
+  }
+}
+
 /* Hero Section */
 .hero {
   min-height: 100vh;

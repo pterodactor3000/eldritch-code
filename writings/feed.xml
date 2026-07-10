@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+  <title>Eldritch Code - Forbidden Scrolls</title>
+  <link>https://eldritchcode.it/writings/</link>
+  <description>Writings on programming, craft, and the cosmic unknown.</description>
+  <item>
+    <title>The rituals of the n-th survivor</title>
+    <link>https://eldritchcode.it/writings/best-large-array-filter/</link>
+    <guid>https://eldritchcode.it/writings/best-large-array-filter/</guid>
+    <pubDate>Mon, 29 Jun 2026 00:00:00 GMT</pubDate>
+    <description>The problem: I have a vast array of items - numbers, in fact. What is needed of me is to ritualistically perform n-th remaining element severance. Repeatedly. Using such methods like splice came to…</description>
+  </item>
+  <item>
+    <title>The curse of Linear-Cursor MCP connection</title>
+    <link>https://eldritchcode.it/writings/linear-cursor-mcp-connection/</link>
+    <guid>https://eldritchcode.it/writings/linear-cursor-mcp-connection/</guid>
+    <pubDate>Mon, 15 Jun 2026 00:00:00 GMT</pubDate>
+    <description>I needed Linear in Cursor on Linux. The OAuth flow almost works, which is worse than it cleanly failing.</description>
+  </item>
+  <item>
+    <title>The curse of Playwright CLI and Chromium on Arch</title>
+    <link>https://eldritchcode.it/writings/playwright-chromium-on-arch/</link>
+    <guid>https://eldritchcode.it/writings/playwright-chromium-on-arch/</guid>
+    <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
+    <description>I needed playwright-cli for agent browser automation on CachyOS. It failed immediately, not because Chromium was missing. It was looking in the wrong place...</description>
+  </item>
+</channel>
+</rss>

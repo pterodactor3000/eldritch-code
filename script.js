@@ -112,6 +112,43 @@ if (skillModal) {
 
 initSkillPreviews();
 
+// Scroll progress bar: CSS animation-timeline: scroll() drives this natively
+// in supporting browsers (zero JS cost there). This is a fallback for
+// browsers that don't support it yet (e.g. Firefox), so the bar isn't
+// permanently stuck at zero width.
+(function initScrollProgressFallback() {
+    const supportsScrollTimeline = typeof CSS !== 'undefined'
+        && CSS.supports
+        && CSS.supports('animation-timeline: scroll(root block)');
+    if (supportsScrollTimeline) return;
+
+    const bars = document.querySelectorAll('.scroll-progress');
+    if (bars.length === 0) return;
+
+    function updateProgress() {
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
+        const clamped = Math.min(1, Math.max(0, progress));
+        bars.forEach((bar) => {
+            bar.style.transform = `scaleX(${clamped})`;
+        });
+    }
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(() => {
+                updateProgress();
+                ticking = false;
+            });
+        }
+    }, { passive: true });
+
+    window.addEventListener('resize', updateProgress);
+    updateProgress();
+})();
+
 // Mobile nav: full menu at top, single active section when scrolled
 (function initMobileNav() {
     const nav = document.querySelector('nav');

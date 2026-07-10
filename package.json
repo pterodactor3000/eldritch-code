@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build-writings.js",
-    "dev": "npm run build && wrangler dev"
+    "dev": "npm run build && wrangler dev",
+    "test": "node --test \"scripts/**/*.test.js\""
   },
   "devDependencies": {
     "@pterodactor3000/silica-animus": "^0.2.1",
