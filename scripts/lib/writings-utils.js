@@ -190,7 +190,7 @@ export function loadPosts(postsDir) {
     throw new Error(`Posts directory not found: ${postsDir}`);
   }
 
-  const files = fs.readdirSync(postsDir).filter((f) => f.endsWith('.md'));
+  const files = fs.readdirSync(postsDir).filter((f) => f.endsWith('.md') && !f.startsWith('_'));
   if (files.length === 0) {
     throw new Error(`No .md files found in ${postsDir}`);
   }
