@@ -4,7 +4,7 @@ Issue creation after roadmap write. Read tool schemas before calling — names b
 
 ## Discovery signals
 
-Same as rites-of-data-harvest: server must list/create issues with `title` and `description`. Prefer providers that expose `save_issue`, `create_issue`, or equivalent.
+Same as canticle-of-data-harvest: server must list/create issues with `title` and `description`. Prefer providers that expose `save_issue`, `create_issue`, or equivalent.
 
 Known providers: Linear, Jira, GitHub Issues.
 
@@ -39,7 +39,7 @@ Do not strip the prefix for any provider.
 
 ## Plan
 
-Run `/10x-plan <change-id>` when ready.
+Run `/rites-of-true-aim <change-id>` when ready.
 ```
 
 ## Field mapping
