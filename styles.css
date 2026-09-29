@@ -810,11 +810,21 @@ footer {
   }
 
   .writings-grid {
-    grid-template-columns: 1fr;
+    /* grid-template-columns: 1fr; */
   }
 }
 
 /* Writings - layout and reading overrides (typography inherits landing defaults) */
+
+@keyframes slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% + 100vw));
+  }
+}
+
 .writings-page {
   min-height: 100vh;
   padding: 8rem 2rem 4rem;
@@ -868,15 +878,42 @@ footer {
   color: var(--ancient-gold);
 }
 
-.writings-grid {
+/* .writings-grid-container {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2rem;
+  place-items: center;
+} */
+
+.writings-grid-container {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
 }
 
-#writings .writings-grid {
-  max-width: 900px;
-  margin: 0 auto;
+.writings-grid {
+  display: flex;
+  gap: 2rem;
+  will-change: transform;
+  animation: slide linear both;
+  animation-timeline: scroll(self block);
+  animation-range: 0% 100%;
+  padding: 0 8vw;
+  /* display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem; */
+}
+
+#writings {
+  height: 400vh;
+  position: relative;
+  /* max-width: 900px;
+  margin: 0 auto; */
 }
 
 .section-link {
@@ -887,6 +924,8 @@ footer {
 .writings-card {
   text-decoration: none;
   color: inherit;
+  width: 400px;
+  flex-shrink: 0;
 }
 
 .writings-card:not([hidden]) {
