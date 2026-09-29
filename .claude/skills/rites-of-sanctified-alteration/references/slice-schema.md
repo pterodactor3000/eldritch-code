@@ -1,6 +1,6 @@
 # Slice Schema — Sanctified Alteration
 
-Roadmap slice contract aligned with `/10x-roadmap` output. New slices must match existing slices in the live `roadmap.md` byte-for-byte in structure.
+Roadmap slice contract aligned with `/rites-of-rousing` output. New slices must match existing slices in the live `roadmap.md` byte-for-byte in structure.
 
 ## Slice body template
 
@@ -50,7 +50,7 @@ Foundation rows use `(foundation)` prefix in Outcome column; slice rows do not.
 Append under `## Backlog Handoff`:
 
 ```markdown
-| S-NN | <change-id> | <short issue title> | <yes if ready else no> | Run `/10x-plan <change-id>` or — |
+| S-NN | <change-id> | <short issue title> | <yes if ready else no> | Run `/rites-of-true-aim <change-id>` or — |
 ```
 
 `Suggested issue title` is the human short title **without** the `// [S-NN]::… //` prefix.

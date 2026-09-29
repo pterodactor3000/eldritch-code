@@ -8,7 +8,7 @@
     "test": "node --test \"scripts/**/*.test.js\""
   },
   "devDependencies": {
-    "@pterodactor3000/silica-animus": "^0.2.1",
+    "@pterodactor3000/silica-animus": "^0.8.0",
     "gray-matter": "^4.0.3",
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",
